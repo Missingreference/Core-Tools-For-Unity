@@ -20,9 +20,26 @@ namespace Isaac.Tools
         public Vector2Int size;
         public int count;
 
-        public BoundsInt2D(int xMin, int yMin, int xSize, int ySize) : this(new Vector2Int(xMin, yMin), new Vector2Int(xMin + xSize - 1, yMin + ySize - 1)) { }
+        public BoundsInt2D(int xMin, int yMin, int xSize, int ySize) : this(new Vector2Int(xMin, yMin), xSize, ySize) { }
         public BoundsInt2D(int xMin, int yMin, Vector2Int max) : this(new Vector2Int(xMin, yMin), max) { }
-        public BoundsInt2D(Vector2Int min, int xSize, int ySize) : this(min, new Vector2Int(min.x + xSize - 1, min.y + ySize - 1)) { }
+
+        public BoundsInt2D(Vector2Int min, int xSize, int ySize)
+        {
+            if(xSize < 0)
+            {
+                throw new ArgumentException("xSize parameter cannot be less than zero. Received '" + xSize + "'.", nameof(xSize));
+            }
+            if(ySize < 0)
+            {
+                throw new ArgumentException("ySize parameter cannot be less than zero. Received '" + ySize + "'.", nameof(ySize));
+            }
+
+            this.min = min;
+            this.max = new Vector2Int(min.x + Mathf.Max(0, xSize - 1), min.y + Mathf.Max(0, ySize - 1));
+            this.size = new Vector2Int(xSize, ySize);
+            this.center = new Vector2(min.x + (size.x / 2.0f), min.y + (size.y / 2.0f));
+            this.count = size.x * size.y;
+        }
 
         public BoundsInt2D(Vector2Int min, Vector2Int max)
         {
@@ -36,7 +53,7 @@ namespace Isaac.Tools
             this.min = min;
             this.max = max;
             this.size = max - min + Vector2Int.one;
-            this.center = new Vector2(size.x / 2.0f, size.y / 2.0f);
+            this.center = new Vector2(min.x + (size.x / 2.0f), min.y + (size.y / 2.0f));
             this.count = size.x * size.y;
         }
 
