@@ -48,7 +48,7 @@ namespace Isaac.Tools
 
         static public Vector2Int IndexToCoord(int index, BoundsInt2D bounds) //index 10 min -9 size 15, 10
         {
-            if(index < 0 || index > bounds.count) throw new IndexOutOfRangeException("Index '" + index + "' is not within the specified bounds. (Min: " + bounds.min + " Max: " + bounds.max + ")");
+            if(index < 0 || index > bounds.count) throw new IndexOutOfRangeException("Index '" + index + "' is not within the specified bounds. Index would end up being at the coord (" + ((index % bounds.size.x) + bounds.min.x).ToString() + "," + ((index / bounds.size.x) + bounds.min.y).ToString() + ") (Min: " + bounds.min + " Max: " + bounds.max + ") (Max index: " + bounds.count + ")");
             return new Vector2Int((index % bounds.size.x) + bounds.min.x, (index / bounds.size.x) + bounds.min.y);
         }
 
@@ -117,6 +117,31 @@ namespace Isaac.Tools
             }
 
             return m_ErrorSprite;
+        }
+
+        static public void DrawBounds(BoundsInt bounds)
+        {
+            DrawBounds(new Bounds(bounds.center, bounds.size));
+        }
+
+        static public void DrawBounds(BoundsInt bounds, float centerMarkerSize)
+        {
+            DrawBounds(new Bounds(bounds.center, bounds.size), centerMarkerSize, Color.white, 0.0f, true);
+        }
+
+        static public void DrawBounds(BoundsInt bounds, float centerMarkerSize, Color color)
+        {
+            DrawBounds(new Bounds(bounds.center, bounds.size), centerMarkerSize, color, 0.0f, true);
+        }
+
+        static public void DrawBounds(BoundsInt bounds, float centerMarkerSize, Color color, float duration)
+        {
+            DrawBounds(new Bounds(bounds.center, bounds.size), centerMarkerSize, color, duration, true);
+        }
+
+        static public void DrawBounds(BoundsInt bounds, float centerMarkerSize, Color color, float duration, bool depthTest)
+        {
+            DrawBounds(new Bounds(bounds.center, bounds.size), centerMarkerSize, color, duration, depthTest);
         }
 
         static public void DrawBounds(Bounds bounds)
