@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 
 using Random = UnityEngine.Random;
 
-namespace Isaac.Tools
+namespace Elanetic.Tools
 {
     public static class Utils
     {

@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Isaac.Tools
+namespace Elanetic.Tools
 {
 	public interface ICoRunner
 	{

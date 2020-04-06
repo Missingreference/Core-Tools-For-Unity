@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Isaac.Tools
+namespace Elanetic.Tools
 {
 
 	public class SpriteAnimator : MonoBehaviour

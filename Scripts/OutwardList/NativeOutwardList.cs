@@ -2,7 +2,7 @@
 using Unity.Collections;
 using Unity.Mathematics;
 
-namespace Isaac.Tools
+namespace Elanetic.Tools
 {
 
     /// <summary>

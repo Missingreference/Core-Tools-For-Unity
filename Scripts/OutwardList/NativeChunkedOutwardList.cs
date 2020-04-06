@@ -4,7 +4,7 @@ using Unity.Mathematics;
 
 //NOTE: Does not work. Unity Collections does not support nested arrays since NativeChunkList relys on NativeList of NativeArrays.
 
-namespace Isaac.Tools
+namespace Elanetic.Tools
 {
 
     /*

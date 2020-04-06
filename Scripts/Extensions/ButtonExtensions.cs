@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 
-namespace Isaac.Tools
+namespace Elanetic.Tools
 {
 	public static class ButtonExtensions
 	{

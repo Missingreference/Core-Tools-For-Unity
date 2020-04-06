@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Isaac.Tools
+namespace Elanetic.Tools
 {
 	public static class RectTransformExtensions
 	{

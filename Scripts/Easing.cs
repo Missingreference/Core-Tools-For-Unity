@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Profiling;
 
-namespace Isaac.Tools
+namespace Elanetic.Tools
 {
     /* 
      * Functions taken from Tween.js - Licensed under the MIT license

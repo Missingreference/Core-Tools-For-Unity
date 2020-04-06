@@ -2,7 +2,7 @@
 using System.Globalization;
 using UnityEngine;
 
-namespace Isaac.Tools
+namespace Elanetic.Tools
 {
     /// <summary>
     /// A simpler version of UnityEngine.BoundsInt.

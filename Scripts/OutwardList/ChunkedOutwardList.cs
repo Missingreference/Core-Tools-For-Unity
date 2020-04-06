@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 //using UnityEngine;
 
-namespace Isaac.Tools
+namespace Elanetic.Tools
 {
     public class ChunkedOutwardList<T>
     {

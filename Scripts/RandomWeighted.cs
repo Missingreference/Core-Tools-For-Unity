@@ -2,7 +2,7 @@
 using System;
 using Random = UnityEngine.Random;
 
-namespace Isaac.Tools
+namespace Elanetic.Tools
 {
 
 	static public class RandomWeighted
