@@ -58,6 +58,9 @@ namespace Elanetic.Tools
 		void Awake()
 		{
 			m_RequiredShader = Shader.Find("Sprites/Layered");
+			m_ClearTexture = new Texture2D(2, 2);
+			m_ClearTexture.SetPixels(new Color[4] { Color.clear, Color.clear, Color.clear, Color.clear });
+			m_ClearTexture.Apply();
 		}
 
 		void OnEnable()
@@ -119,7 +122,9 @@ namespace Elanetic.Tools
 
 		public void SetAnimation(SpriteAnimation animation, int layer)
 		{
-			if (layer < 0 || layer > 9) throw new ArgumentOutOfRangeException("Argument 'layer' must be from the range of 0 to 9 of an index.");
+			if (layer < 0 || layer > m_Animations.Length-1) throw new ArgumentOutOfRangeException("Argument 'layer' must be from the range of 0 to 9 of an index.");
+
+			m_Animations[layer] = animation;
 
 			//Get new first non null index
 			m_FirstNonNullIndex = -1;
@@ -147,8 +152,6 @@ namespace Elanetic.Tools
 					}
 				}
 			}
-
-			m_Animations[layer] = animation;
 
 			OnSpritesSet();
 		}
@@ -316,12 +319,19 @@ namespace Elanetic.Tools
 			if (m_SpriteRenderer != null)
 			{
 				m_SpriteRenderer.sprite = sprite;
+				string s = "";
+                for(int i = 0; i < sprite.uv.Length; i++)
+                {
+					s += "[" + sprite.uv[i].x + "," + sprite.uv[i].y + "] ";
+                }
+				//Debug.Log(sprite.name + ": Length: " + sprite.uv.Length + ": " + s);
 			}
 
-			for (int i = 1; i < 10; i++)
+			//TODO Use MaterialPropertyBlock for extra performance. http://thomasmountainborn.com/2016/05/25/materialpropertyblocks/
+			for(int i = 1; i < 10; i++)
 			{
 
-				if(i >= m_FirstNonNullIndex)
+				if(i >= m_FirstNonNullIndex && m_Animations[i] != null)
 				{
 					if(m_SpriteRenderer != null)
 					{
@@ -341,6 +351,17 @@ namespace Elanetic.Tools
 					if (m_Image != null)
 					{
 						m_Image.material.SetTexture("_MainTex" + (i + 1).ToString(), m_ClearTexture);
+					}
+				}
+                if(i == 0)
+				{
+					if(m_SpriteRenderer != null)
+					{
+						m_SpriteRenderer.material.SetFloatArray("_MainOffset", new float[2] { 0.2f, 0.2f });
+					}
+					if(m_Image != null)
+					{
+
 					}
 				}
 			}

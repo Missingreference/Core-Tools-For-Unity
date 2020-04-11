@@ -5,15 +5,16 @@ Shader "Sprites/Layered"
     Properties
     {
         [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
-        _MainTex2("Sprite Texture", 2D) = "white" {}
-        _MainTex3("Sprite Texture", 2D) = "white" {}
-        _MainTex4("Sprite Texture", 2D) = "white" {}
-        _MainTex5("Sprite Texture", 2D) = "white" {}
-        _MainTex6("Sprite Texture", 2D) = "white" {}
-        _MainTex7("Sprite Texture", 2D) = "white" {}
-        _MainTex8("Sprite Texture", 2D) = "white" {}
-        _MainTex9("Sprite Texture", 2D) = "white" {}
-        _MainTex10("Sprite Texture", 2D) = "white" {}
+        [PerRendererData] _MainTex2("Sprite Texture", 2D) = "white" {}
+        [PerRendererData] _MainTex3("Sprite Texture", 2D) = "white" {}
+        [PerRendererData] _MainTex4("Sprite Texture", 2D) = "white" {}
+        [PerRendererData] _MainTex5("Sprite Texture", 2D) = "white" {}
+        [PerRendererData] _MainTex6("Sprite Texture", 2D) = "white" {}
+        [PerRendererData] _MainTex7("Sprite Texture", 2D) = "white" {}
+        [PerRendererData] _MainTex8("Sprite Texture", 2D) = "white" {}
+        [PerRendererData] _MainTex9("Sprite Texture", 2D) = "white" {}
+        [PerRendererData] _MainTex10("Sprite Texture", 2D) = "white" {}
+        _OffsetUV("UVOffset", Vector) = (0,0,0,0)
         _Color ("Tint", Color) = (1,1,1,1)
         [MaterialToggle] PixelSnap ("Pixel snap", Float) = 0
         [HideInInspector] _RendererColor ("RendererColor", Color) = (1,1,1,1)
@@ -41,6 +42,8 @@ Shader "Sprites/Layered"
         Pass
         {
         CGPROGRAM
+// Upgrade NOTE: excluded shader from DX11, OpenGL ES 2.0 because it uses unsized arrays
+#pragma exclude_renderers d3d11 gles
             #pragma vertex SpriteVert
             #pragma fragment SpriteFrag
             #pragma target 2.0
@@ -73,8 +76,12 @@ Shader "Sprites/Layered"
         #ifndef UNITY_INSTANCING_ENABLED
             fixed4 _RendererColor;
             fixed2 _Flip;
+            //The offset of the main sprite placed in the sprite renderer
+            float2 _MainOffset;
+            float2 _UVOffsets[9];
         #endif
             float _EnableExternalAlpha;
+            float2 _OffsetUV;
         CBUFFER_END
 
             // Material Color.
@@ -141,6 +148,7 @@ Shader "Sprites/Layered"
 
             fixed4 SampleSpriteTexture(float2 uv)
             {
+                uv = uv + _MainOffset;
                 fixed4 color = MergeColors(tex2D(_MainTex, uv), tex2D(_MainTex2, uv));
                 color = MergeColors(color, tex2D(_MainTex2, uv));
                 color = MergeColors(color, tex2D(_MainTex3, uv));
