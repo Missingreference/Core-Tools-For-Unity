@@ -7,7 +7,7 @@ using UnityEngine.Events;
 
 namespace Elanetic.Tools
 {
-	public static class ButtonExtensions
+	static public class ButtonExtensions
 	{
 		/// <summary>
 		/// This will add an EventTrigger component if one does not already exist. Destroying that component will make you lose your listener.
@@ -15,7 +15,7 @@ namespace Elanetic.Tools
 		/// <param name="button"></param>
 		/// <param name="action"></param>
 		/// <param name="triggerType"></param>
-		public static void AddListener(this Button button, UnityAction action, EventTriggerType triggerType)
+		static public void AddListener(this Button button, UnityAction action, EventTriggerType triggerType)
 		{
 			EventTrigger eventTrigger = button.GetComponent<EventTrigger>();
 			if(eventTrigger == null) eventTrigger = button.gameObject.AddComponent<EventTrigger>();
@@ -37,7 +37,7 @@ namespace Elanetic.Tools
 		/// <param name="button"></param>
 		/// <param name="action"></param>
 		/// <param name="triggerType"></param>
-		public static void AddListener(this Button button, UnityAction<BaseEventData> action, EventTriggerType triggerType)
+		static public void AddListener(this Button button, UnityAction<BaseEventData> action, EventTriggerType triggerType)
 		{
 			EventTrigger eventTrigger = button.GetComponent<EventTrigger>();
 			if(eventTrigger == null) eventTrigger = button.gameObject.AddComponent<EventTrigger>();

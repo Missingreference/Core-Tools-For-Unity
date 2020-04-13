@@ -11,7 +11,7 @@ namespace Elanetic.Tools
 {
 	#region Tilemap
 
-	public static class TilemapExtensions
+	static public class TilemapExtensions
 	{
 		private delegate UnityEngine.Object[] GetTilesBlockFastDelegate(Vector3Int position, Vector3Int blockDimensions);
 		static private Dictionary<Tilemap, GetTilesBlockFastDelegate> m_SavedDelegates = new Dictionary<Tilemap, GetTilesBlockFastDelegate>();
@@ -51,7 +51,7 @@ namespace Elanetic.Tools
 
 	#region ITilemap
 
-	public static class ITilemapExtension
+	static public class ITilemapExtension
 	{
 		static private Func<ITilemap, Tilemap> GetTilemapDelegate;
 		static private bool retrieved = false;

@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace Elanetic.Tools
 {
-    public static class GameObjectExtensions
+    static public class GameObjectExtensions
     {
 
-        public static T RequireComponent<T>(this GameObject gameObject) where T : UnityEngine.Component
+        static public T RequireComponent<T>(this GameObject gameObject) where T : UnityEngine.Component
         {
             T component = gameObject.GetComponent<T>();
             if(component == null) return gameObject.AddComponent<T>();

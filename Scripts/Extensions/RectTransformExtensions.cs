@@ -5,13 +5,13 @@ using UnityEngine.UI;
 
 namespace Elanetic.Tools
 {
-	public static class RectTransformExtensions
+	static public class RectTransformExtensions
 	{
 
 		/// <summary>
 		/// Set pivot without changing the position of the element
 		/// </summary>
-		public static void SetPivot(this RectTransform rectTransform, Vector2 pivot)
+		static public void SetPivot(this RectTransform rectTransform, Vector2 pivot)
 		{
 			Vector3 deltaPosition = rectTransform.pivot - pivot;    // get change in pivot
 			deltaPosition.Scale(rectTransform.rect.size);           // apply sizing

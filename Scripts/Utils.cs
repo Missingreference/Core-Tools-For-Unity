@@ -11,11 +11,11 @@ namespace Elanetic.Tools
 {
     public static class Utils
     {
-        public static int minSortingOrder = -32768;
-        public static int maxSortingOrder = 32767;
+        static public int minSortingOrder => -32768;
+        static public int maxSortingOrder => 32767;
 
-        private static Texture2D m_ErrorTexture;
-        private static Sprite m_ErrorSprite;
+        static private Texture2D m_ErrorTexture;
+        static private Sprite m_ErrorSprite;
 
         static public Color GetRandomColor()
         {
@@ -117,6 +117,33 @@ namespace Elanetic.Tools
             }
 
             return m_ErrorSprite;
+        }
+
+        static public Texture2D PadTexture2D(Texture2D targetTexture, int amount)
+        {
+            return PadTexture2D(targetTexture, amount, Color.clear);
+        }
+
+        static public Texture2D PadTexture2D(Texture2D targetTexture, int amount, Color color)
+        {
+            if(targetTexture == null) throw new ArgumentNullException(nameof(targetTexture));
+            if(amount <= 0) throw new ArgumentException("Argument 'amount' must be more than zero.", nameof(amount));
+
+            Texture2D finalTexture = new Texture2D(targetTexture.width+(amount*2), targetTexture.height+(amount*2), targetTexture.format, false);
+
+            finalTexture.filterMode = targetTexture.filterMode;
+
+            //Set padded pixels to color
+            finalTexture.SetPixels(0, 0, finalTexture.width, amount, color);
+            finalTexture.SetPixels(0, finalTexture.height - amount, finalTexture.width, amount, color);
+            finalTexture.SetPixels(0, amount, amount, finalTexture.height-(amount*2), color);
+            finalTexture.SetPixels(finalTexture.width - amount, amount, amount, finalTexture.height - (amount * 2), color);
+
+            finalTexture.SetPixels32(amount, amount, targetTexture.width, targetTexture.height, targetTexture.GetPixels32());
+
+            finalTexture.Apply();
+
+            return finalTexture;
         }
 
         static public void DrawBounds(BoundsInt bounds)
