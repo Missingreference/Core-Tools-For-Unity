@@ -69,6 +69,16 @@ namespace Elanetic.Tools
 
             //Do SetPixels
             targetTexture.SetPixels32(x, y, blockWidth, blockHeight, m_ColorPool, miplevel);
-;        }
+        }
+
+        static public void SetPixels(this Texture2D targetTexture, Color color)
+        {
+            SetPixels32(targetTexture, 0, 0, targetTexture.width, targetTexture.height, color, 0);
+        }
+
+        static public void SetPixels32(this Texture2D targetTexture, Color32 color)
+        {
+            SetPixels32(targetTexture, 0, 0, targetTexture.width, targetTexture.height, color, 0);
+        }
     }
 }
