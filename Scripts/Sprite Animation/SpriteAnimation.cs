@@ -7,9 +7,31 @@ namespace Elanetic.Tools
 {
     public class SpriteAnimation
     {
+        //The name of this animation
         public string animationName { get; private set; }
+        //The reference to the sprite assets
         public Sprite[] sprites { get; private set; }
+        //The individual frames that reference the index of the sprite in the sprites array
         public int[] frames { get; private set; }
+
+        public int frameCount => frames.Length;
+
+        //Assumes that the inputted sprites are the frames
+        public SpriteAnimation(string animationName, Sprite[] sprites)
+        {
+            if (string.IsNullOrWhiteSpace(animationName)) throw new ArgumentException("Argument 'animationName' cannot be null or whitespace.");
+            if (sprites == null || sprites.Length == 0) throw new ArgumentException("Argument 'sprites' cannot be null or an empty array.");
+
+            this.animationName = animationName;
+            this.sprites = sprites;
+
+            //Fill in the frame indices with the sprite indices
+            frames = new int[sprites.Length];
+            for (int i = 0; i < frames.Length; i++)
+            {
+                frames[i] = i;
+            }
+        }
 
         public SpriteAnimation(string animationName, Sprite[] sprites, params int[] animationFrames)
         {

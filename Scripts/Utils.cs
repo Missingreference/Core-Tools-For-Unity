@@ -11,8 +11,8 @@ namespace Elanetic.Tools
 {
     public static class Utils
     {
-        static public int minSortingOrder => -32768;
-        static public int maxSortingOrder => 32767;
+        static public int minSortingOrder => -32768; //This is just short.minValue
+        static public int maxSortingOrder => 32767; //This is just short.maxValue
 
         static private Texture2D m_ErrorTexture;
         static private Sprite m_ErrorSprite;

@@ -20,13 +20,13 @@ namespace Elanetic.Tools
     public class SpriteDirector : MonoBehaviour
     {
         public SpriteAnimator spriteAnimator { get; private set; }
-        public string currentAnimation { get; private set; } = null;
+        public string currentAnimationName { get; private set; } = null;
         /// <summary>
         /// If true, calling play for the same animation as the 'currentAnimation' will restart the animation. Setting to false would be good for if calling play constantly.
         /// </summary>
         public bool resetOnSamePlayingAnimation { get; set; }
 
-        private Dictionary<string, Sprite[]> m_Animations = new Dictionary<string, Sprite[]>();
+        private Dictionary<string, SpriteAnimation> m_Animations = new Dictionary<string, SpriteAnimation>();
         private string m_NextAnimation = "";
 
         void Awake()
@@ -57,34 +57,32 @@ namespace Elanetic.Tools
 
         #region Public Functions
 
-        public void AddAnimation(string animationName, Sprite[] animation)
+        public void AddAnimation(SpriteAnimation animation)
         {
-            if(string.IsNullOrEmpty(animationName))
+            if(string.IsNullOrEmpty(animation.animationName))
             {
-                Debug.LogError("Cannot add animation. Animation Name parameter cannot be null or empty.");
-                return;
+                throw new ArgumentException("Cannot add animation. The name of the Sprite Animation cannot be null or empty.", nameof(animation));
             }
 
             if(animation == null)
             {
-                Debug.LogError("Cannot add animation. Sprite array(animation) cannot be null.");
-                return;
+                throw new ArgumentNullException(nameof(animation), "The inputted Sprite Animation cannot be null.");
             }
 
-            if(m_Animations.ContainsKey(animationName))
+            if(m_Animations.ContainsKey(animation.animationName))
             {
-                Debug.LogError("Cannot add animation. Animation with the name '" + animationName + "' already exists as an animation.");
+                Debug.LogError("Cannot add animation. Animation with the name '" + animation.animationName + "' already exists as an animation.");
                 return;
             }
 
-            m_Animations.Add(animationName, animation);
+            m_Animations.Add(animation.animationName, animation);
         }
 
-        public void AddAnimations(Tuple<string, Sprite[]>[] animations)
+        public void AddAnimations(SpriteAnimation[] animations)
         {
             for(int i = 0; i < animations.Length; i++)
             {
-                AddAnimation(animations[i].Item1, animations[i].Item2);
+                AddAnimation(animations[i]);
             }
         }
 
@@ -102,11 +100,11 @@ namespace Elanetic.Tools
                 return;
             }
 
-            if(currentAnimation == animationName)
+            if(currentAnimationName == animationName)
             {
                 //The animation we want to remove is currently playing. Stop the animation and remove the sprites from the SpriteAnimator. 
                 spriteAnimator.Stop();
-                spriteAnimator.sprites = null;
+                spriteAnimator.animation = null;
                 //Should the next animation be played if it exists? //OnAnimationFinished();
             }
 
@@ -132,23 +130,22 @@ namespace Elanetic.Tools
             return m_Animations.Keys.ToArray();
         }
 
-        public Sprite[] GetFrames(string animationName)
+        public SpriteAnimation GetAnimation(string animationName)
         {
-            Sprite[] frames;
-            if(m_Animations.TryGetValue(animationName, out frames))
+            if(m_Animations.TryGetValue(animationName, out SpriteAnimation animation))
             {
-                return frames;
+                return animation;
             }
             return null;
         }
 
-        public Tuple<string, Sprite[]>[] GetAnimations()
+        public SpriteAnimation[] GetAnimations()
         {
-            Tuple<string, Sprite[]>[] animations = new Tuple<string, Sprite[]>[m_Animations.Count];
+            SpriteAnimation[] animations = new SpriteAnimation[m_Animations.Count];
             string[] animationNames = GetAnimationNames();
             for(int i = 0; i < m_Animations.Count; i++)
             {
-                animations[i] = new Tuple<string, Sprite[]>(animationNames[i], m_Animations[animationNames[i]]);
+                animations[i] = m_Animations[animationNames[i]];
             }
             return animations;
         }
@@ -203,7 +200,7 @@ namespace Elanetic.Tools
                 return;
             }
 
-            if(!resetOnSamePlayingAnimation && animationName == currentAnimation)
+            if(!resetOnSamePlayingAnimation && animationName == currentAnimationName)
             {
                 //Animation won't reset if the animations are the same.
                 spriteAnimator.loop = loop;
@@ -211,13 +208,13 @@ namespace Elanetic.Tools
                 return;
             }
 
-            spriteAnimator.sprites = m_Animations[animationName];
+            spriteAnimator.animation = m_Animations[animationName];
             spriteAnimator.Stop();
             spriteAnimator.loop = loop;
             spriteAnimator.playbackSpeed = playbackSpeed;
-            spriteAnimator.SetFrame(0);
+            spriteAnimator.SetFrame(startFrame);
             spriteAnimator.Play();
-            currentAnimation = animationName;
+            currentAnimationName = animationName;
         }
 
         public void PlayOnceThenLoop(string firstAnimationName, string secondLoopingAnimation)

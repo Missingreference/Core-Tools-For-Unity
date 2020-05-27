@@ -11,7 +11,8 @@ namespace Elanetic.Tools
     public class LayeredSpriteDirector : MonoBehaviour
     {
         public LayeredSpriteAnimator spriteAnimator { get; private set; }
-        public string currentAnimation { get; private set; } = null;
+        public string currentAnimationName { get; private set; } = null;
+        public SpriteAnimation[] currentPlayingAnimations { get; private set; } = new SpriteAnimation[10];
         /// <summary>
         /// If true, calling play for the same animation as the 'currentAnimation' will restart the animation. Setting to false would be good for if calling play constantly.
         /// </summary>
@@ -99,7 +100,7 @@ namespace Elanetic.Tools
             if(string.IsNullOrWhiteSpace(animationName)) throw new ArgumentNullException("Argument 'animationName' cannot be null or whitespace.");
             if(layer < 0 || layer > m_Animations.Length - 1) throw new ArgumentOutOfRangeException("Argument 'layer' must be from the range of 0 to 9 of an index.");
 
-            if(currentAnimation == animationName)
+            if(currentAnimationName == animationName)
             {
                 //The animation we want to remove is currently playing. Stop the animation and remove the sprites from the SpriteAnimator. 
                 spriteAnimator.Stop();
@@ -223,7 +224,7 @@ namespace Elanetic.Tools
         {
             if(string.IsNullOrWhiteSpace(animationName)) throw new ArgumentNullException("Argument 'animationName' cannot be null or whitespace.");
             
-            if(!resetOnSamePlayingAnimation && animationName == currentAnimation)
+            if(!resetOnSamePlayingAnimation && animationName == currentAnimationName)
             {
                 //Animation won't reset if the animations are the same.
                 spriteAnimator.loop = loop;
@@ -236,18 +237,20 @@ namespace Elanetic.Tools
                 if(m_Animations[i].TryGetValue(animationName, out animation))
                 {
                     spriteAnimator.SetAnimation(animation, i);
+                    currentPlayingAnimations[i] = animation;
                 }
                 else
                 {
                     spriteAnimator.SetAnimation(null, i);
+                    currentPlayingAnimations[i] = null;
                 }
             }
             spriteAnimator.Stop();
             spriteAnimator.loop = loop;
             spriteAnimator.playbackSpeed = playbackSpeed;
-            spriteAnimator.SetFrame(0);
+            spriteAnimator.SetFrame(startFrame);
             spriteAnimator.Play();
-            currentAnimation = animationName;
+            currentAnimationName = animationName;
         }
 
         /*

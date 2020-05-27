@@ -44,6 +44,7 @@ namespace Elanetic.Tools
 		[HideInInspector]
 		public List<SpriteAnimator> shots = new List<SpriteAnimator>();
 
+		public Action onFrameChanged;
 		public Action onFinishedAnimation;
 
 		private Shader m_RequiredShader;
@@ -59,7 +60,7 @@ namespace Elanetic.Tools
 		{
 			m_RequiredShader = Shader.Find("Sprites/Layered");
 			m_ClearTexture = new Texture2D(2, 2);
-			m_ClearTexture.SetPixels(new Color[4] { Color.clear, Color.clear, Color.clear, Color.clear });
+			m_ClearTexture.SetPixels(Color.clear);
 			m_ClearTexture.Apply();
 		}
 
@@ -367,6 +368,7 @@ namespace Elanetic.Tools
 			}
 
 			currentFrame = frameIndex;
+			onFrameChanged?.Invoke();
 		}
 
 		public void SetAnimationTimeNormalized(float normalizedTime)

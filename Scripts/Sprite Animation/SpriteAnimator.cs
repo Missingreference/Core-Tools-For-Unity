@@ -42,16 +42,16 @@ namespace Elanetic.Tools
 			}
 		}
 
-		public Sprite[] sprites
+		public SpriteAnimation animation
 		{
 			get
 			{
-				return m_Sprites;
+				return m_SpriteAnimation;
 			}
 			set
 			{
-				m_Sprites = value;
-				OnSpritesSet();
+				m_SpriteAnimation = value;
+				OnAnimationSet();
 			}
 		}
 
@@ -59,9 +59,10 @@ namespace Elanetic.Tools
 		public List<SpriteAnimator> shots = new List<SpriteAnimator>();
 
 		public Action onFinishedAnimation;
+		public Action onFrameChanged;
 
 		[SerializeField]
-		private Sprite[] m_Sprites = new Sprite[0];
+		private SpriteAnimation m_SpriteAnimation;
 		private SpriteRenderer m_SpriteRenderer = null;
 		private Image m_Image = null;
 
@@ -71,12 +72,14 @@ namespace Elanetic.Tools
 		{
 			m_Image = GetComponent<Image>();
 			m_SpriteRenderer = GetComponent<SpriteRenderer>();
-			if(currentFrame > sprites.Length - 1)
+			if(m_SpriteAnimation != null && m_SpriteAnimation.IsValid(false))
 			{
-				currentFrame = 0;
-			}
-			if(sprites.Length > 0)
+				if (currentFrame > m_SpriteAnimation.frames.Length - 1)
+				{
+					currentFrame = 0;
+				}
 				SetFrame(currentFrame);
+			}
 			if(playOnEnable) Play();
 		}
 
@@ -115,9 +118,14 @@ namespace Elanetic.Tools
 
 		public void Play()
 		{
-			if(sprites.Length == 0)
+			if(m_SpriteAnimation == null)
 			{
-				Debug.LogWarning("Cannot play Sprite Animator. No Sprites are set.");
+				Debug.LogWarning("Cannot play Sprite Animator. No Sprite Animation is set.");
+				return;
+			}
+			else if(!m_SpriteAnimation.IsValid(false))
+			{
+				Debug.LogWarning("Cannot play Sprite Animator. The Sprite Animation is not valid.");
 				return;
 			}
 
@@ -178,19 +186,19 @@ namespace Elanetic.Tools
 				return;
 			}
 
-			if(sprites.Length > 1)
-				count %= sprites.Length;
+			if(m_SpriteAnimation.frames.Length > 1)
+				count %= m_SpriteAnimation.frames.Length;
 
-			if(currentFrame + count > sprites.Length - 1)
+			if (currentFrame + count > m_SpriteAnimation.frames.Length - 1)
 			{
 				if(loop)
 				{
-					count = sprites.Length - 1 - currentFrame;
+					count = m_SpriteAnimation.frames.Length - 1 - currentFrame;
 					SetFrame(count);
 				}
 				else
 				{
-					SetFrame(sprites.Length - 1);
+					SetFrame(m_SpriteAnimation.frames.Length - 1);
 					Pause();
 					OnFinishedAnimation();
 				}
@@ -214,13 +222,13 @@ namespace Elanetic.Tools
 				return;
 			}
 
-			count %= sprites.Length;
+			count %= m_SpriteAnimation.frames.Length;
 
 			if(currentFrame - count < 0)
 			{
 				if(loop)
 				{
-					count = sprites.Length - 1 - currentFrame;
+					count = m_SpriteAnimation.frames.Length - 1 - currentFrame;
 					SetFrame(count);
 				}
 				else
@@ -243,15 +251,21 @@ namespace Elanetic.Tools
 
 		public void SetFrame(int frameIndex)
 		{
-			if(sprites.Length == 0)
+			if(m_SpriteAnimation.frames.Length == 0)
 			{
 				Debug.LogError("Cannot animate to the set frame. There are not sprites in the sprite list.");
 				return;
 			}
+			else if(m_SpriteAnimation == null)
+            {
+				Debug.LogError("Cannot animate to the set frame. No Sprite Animation is set.");
+				return;
+            }
+			//Too much of a performance overhead to check SpriteAnimation.IsValid() every time we set the frame.
 
-			if(frameIndex < 0 || frameIndex > sprites.Length - 1)
+			if(frameIndex < 0 || frameIndex > m_SpriteAnimation.frames.Length - 1)
 			{
-				Debug.LogWarning("Parameter frameIndex is out of range. Min: 0  Max: " + (sprites.Length - 1) + " Inputted parameter: " + frameIndex);
+				Debug.LogWarning("Parameter frameIndex is out of range. Min: 0  Max: " + (m_SpriteAnimation.frames.Length - 1) + " Inputted parameter: " + frameIndex);
 				return;
 			}
 
@@ -266,7 +280,7 @@ namespace Elanetic.Tools
 				}
 			}
 
-			Sprite sprite = sprites[frameIndex];
+			Sprite sprite = m_SpriteAnimation.sprites[m_SpriteAnimation.frames[frameIndex]];
 
 			if(m_Image != null)
 			{
@@ -283,17 +297,18 @@ namespace Elanetic.Tools
 			}
 
 			currentFrame = frameIndex;
+			onFrameChanged?.Invoke();
 		}
 
 		public void SetAnimationTimeNormalized(float normalizedTime)
 		{
-			if(sprites.Length == 0)
+			if(m_SpriteAnimation == null)
 				return;
 
 			normalizedTime = Mathf.Clamp01(normalizedTime);
 
-			SetFrame(Mathf.FloorToInt(sprites.Length * normalizedTime));
-			m_Timer = (sprites.Length * normalizedTime) % 1.0f;
+			SetFrame(Mathf.FloorToInt(m_SpriteAnimation.frames.Length * normalizedTime));
+			m_Timer = (m_SpriteAnimation.frames.Length * normalizedTime) % 1.0f;
 
 		}
 
@@ -337,14 +352,9 @@ namespace Elanetic.Tools
 				Destroy(gameObject);
 		}
 
-		private void OnSpritesSet()
+		private void OnAnimationSet()
 		{
-			if(m_Sprites == null)
-			{
-				m_Sprites = new Sprite[0];
-			}
-
-			if(m_Sprites.Length == 0)
+			if(m_SpriteAnimation == null || !m_SpriteAnimation.IsValid(false))
 			{
 				Stop();
 				if(m_Image == null && m_SpriteRenderer == null)
@@ -366,9 +376,9 @@ namespace Elanetic.Tools
 			}
 			else
 			{
-				if(currentFrame > m_Sprites.Length - 1)
+				if(currentFrame > m_SpriteAnimation.frames.Length - 1)
 				{
-					SetFrame(m_Sprites.Length - 1);
+					SetFrame(m_SpriteAnimation.frames.Length - 1);
 				}
 				else
 				{
