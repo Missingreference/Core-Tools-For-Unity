@@ -53,7 +53,7 @@ namespace Elanetic.Tools
         {
             for (int i = 0; i < frames.Length; i++)
             {
-                if(frames[i] < 0 || frames[i] > sprites.Length-1) return false;
+                if(frames[i] < 0 || frames[i] > sprites.Length - 1) return false;
                 if (requireNonNullSprites && sprites[frames[i]] == null) return false;
             }
 
@@ -67,7 +67,7 @@ namespace Elanetic.Tools
         /// <returns></returns>
         public Sprite GetFrame(int frameIndex)
         {
-            if (frameIndex < 0 || frameIndex > sprites.Length - 1) throw new IndexOutOfRangeException("Argument 'frameIndex' must be more than zero and a valid index within the size of the sprites array.");
+            if (frameIndex < 0 || frameIndex > frames.Length - 1) throw new IndexOutOfRangeException("Argument 'frameIndex' must be more than or equal to zero and a valid index within the size of the sprites array.");
             return sprites[frames[frameIndex]];
         }
     }

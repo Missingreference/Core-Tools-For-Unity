@@ -329,18 +329,33 @@ namespace Elanetic.Tools
 			}
 
 			//TODO Use MaterialPropertyBlock for extra performance. http://thomasmountainborn.com/2016/05/25/materialpropertyblocks/
-			for(int i = 1; i < 10; i++)
+			for(int i = Mathf.Max(1,m_FirstNonNullIndex); i < 10; i++)
 			{
-
-				if(i >= m_FirstNonNullIndex && m_Animations[i] != null)
-				{
-					if(m_SpriteRenderer != null)
+				if(m_Animations[i] != null)
+                {
+					if(frameIndex < m_Animations[i].frameCount)
 					{
-						m_SpriteRenderer.material.SetTexture("_MainTex" + (i + 1).ToString(), m_Animations[i].GetFrame(frameIndex).texture);
+						sprite = m_Animations[i]?.GetFrame(frameIndex);
+					}
+					else
+                    {
+						sprite = null;
+                    }
+                }
+				else
+                {
+					sprite = null;
+                }
+
+				if(i > m_FirstNonNullIndex && sprite != null)
+				{
+					if (m_SpriteRenderer != null)
+					{
+						m_SpriteRenderer.material.SetTexture("_MainTex" + (i + 1).ToString(), sprite.texture);
 					}
 					if(m_Image != null)
 					{
-						m_Image.material.SetTexture("_MainTex" + (i + 1).ToString(), m_Animations[i].GetFrame(frameIndex).texture);
+						m_Image.material.SetTexture("_MainTex" + (i + 1).ToString(), sprite.texture);
 					}
 				}
 				else
@@ -352,17 +367,6 @@ namespace Elanetic.Tools
 					if (m_Image != null)
 					{
 						m_Image.material.SetTexture("_MainTex" + (i + 1).ToString(), m_ClearTexture);
-					}
-				}
-                if(i == 0)
-				{
-					if(m_SpriteRenderer != null)
-					{
-						m_SpriteRenderer.material.SetFloatArray("_MainOffset", new float[2] { 0.2f, 0.2f });
-					}
-					if(m_Image != null)
-					{
-
 					}
 				}
 			}
