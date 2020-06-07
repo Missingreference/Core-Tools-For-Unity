@@ -14,7 +14,6 @@ Shader "Sprites/Layered"
         [PerRendererData] _MainTex8("Sprite Texture", 2D) = "white" {}
         [PerRendererData] _MainTex9("Sprite Texture", 2D) = "white" {}
         [PerRendererData] _MainTex10("Sprite Texture", 2D) = "white" {}
-        _OffsetUV("UVOffset", Vector) = (0,0,0,0)
         _Color ("Tint", Color) = (1,1,1,1)
         [MaterialToggle] PixelSnap ("Pixel snap", Float) = 0
         [HideInInspector] _RendererColor ("RendererColor", Color) = (1,1,1,1)
@@ -43,7 +42,7 @@ Shader "Sprites/Layered"
         {
         CGPROGRAM
 // Upgrade NOTE: excluded shader from DX11, OpenGL ES 2.0 because it uses unsized arrays
-#pragma exclude_renderers d3d11 gles
+//#pragma exclude_renderers d3d11 gles
             #pragma vertex SpriteVert
             #pragma fragment SpriteFrag
             #pragma target 2.0
