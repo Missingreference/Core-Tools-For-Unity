@@ -1,0 +1,184 @@
+﻿using System;
+using UnityEngine;
+
+namespace Elanetic.Tools.Serialization
+{
+    public static class SerializeUnityTypes
+    {
+        #region Texture2D
+
+        /// <summary>
+        /// Write a Texture2D to the stream.
+        /// </summary>
+        /// <param name="texture2D">The Texture2D to write to the stream.</param>
+        public static void WriteTexture2D(this BitWriter writer, Texture2D texture2D)
+        {
+            if(texture2D == null) throw new ArgumentNullException(nameof(texture2D));
+
+            writer.WriteInt(texture2D.width);
+            writer.WriteInt(texture2D.height);
+            writer.WriteInt((int)texture2D.format);
+
+            writer.WriteByteArray(texture2D.GetRawTextureData());
+        }
+
+        /// <summary>
+        /// Read a Texture2D from the stream.
+        /// </summary>
+        /// <returns>The Texture2D retrieved from the stream.</returns>
+        public static Texture2D ReadTexture2D(this BitReader reader)
+        {
+            int width = reader.ReadInt();
+            int height = reader.ReadInt();
+            TextureFormat format = (TextureFormat)reader.ReadInt();
+
+            Texture2D texture2D = new Texture2D(width, height, format, false);
+
+            texture2D.LoadRawTextureData(reader.ReadByteArray());
+            texture2D.Apply();
+
+            return texture2D;
+        }
+
+        #endregion Texture2D
+
+        #region Vector2
+
+        /// <summary>
+        /// Write a Vector2 to the stream.
+        /// </summary>
+        /// <param name="vector2">The Vector2 to write to the stream.</param>
+        static public void WriteVector2(this BitWriter writer, Vector2 vector2)
+        {
+            writer.WriteFloat(vector2.x);
+            writer.WriteFloat(vector2.y);
+        }
+
+        /// <summary>
+        /// Read a Vector2 from the stream.
+        /// </summary>
+        /// <returns>The Vector2 retrieved from the stream.</returns>
+        static public Vector2 ReadVector2(this BitReader reader) => new Vector2(reader.ReadFloat(), reader.ReadFloat());
+
+        #endregion Vector2
+
+        #region Vector3
+
+        /// <summary>
+        /// Write a Vector3 to the stream.
+        /// </summary>
+        /// <param name="vector3">The Vector3 to write to the stream.</param>
+        static public void WriteVector3(this BitWriter writer, Vector3 vector3)
+        {
+            writer.WriteFloat(vector3.x);
+            writer.WriteFloat(vector3.y);
+            writer.WriteFloat(vector3.z);
+        }
+
+        /// <summary>
+        /// Read a Vector3 from the stream.
+        /// </summary>
+        /// <returns>The Vector3 retrieved from the stream.</returns>
+        static public Vector3 ReadVector3(this BitReader reader) => new Vector3(reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat());
+        
+        #endregion Vector3
+
+        #region Vector4
+
+        /// <summary>
+        /// Write a Vector4 to the stream.
+        /// </summary>
+        /// <param name="vector4">The Vector4 to write to the stream.</param>
+        static public void WriteVector4(this BitWriter writer, Vector4 vector4)
+        {
+            writer.WriteFloat(vector4.x);
+            writer.WriteFloat(vector4.y);
+            writer.WriteFloat(vector4.z);
+            writer.WriteFloat(vector4.w);
+        }
+
+        /// <summary>
+        /// Read a Vector4 from the stream.
+        /// </summary>
+        /// <returns>The Vector4 to read from the stream.</returns>
+        static public Vector4 ReadVector4(this BitReader reader) => new Vector4(reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat());
+
+        #endregion Vector4
+
+        #region Color
+
+        /// <summary>
+        /// Write a Color to the stream.
+        /// </summary>
+        /// <param name="color">The Color to write to the stream.</param>
+        static public void WriteColor(this BitWriter writer, Color color) => writer.WriteColor32(color);
+
+        /// <summary>
+        /// Write a Color32 to the stream.
+        /// </summary>
+        /// <param name="color32">The Color32 to write to the stream.</param>
+        static public void WriteColor32(this BitWriter writer, Color32 color32)
+        {
+            writer.WriteByte(color32.r);
+            writer.WriteByte(color32.g);
+            writer.WriteByte(color32.b);
+            writer.WriteByte(color32.a);
+        }
+
+        /// <summary>
+        /// Read a Color from the stream.
+        /// </summary>
+        /// <returns>The Color retrieved from the stream.</returns>
+        static public Color ReadColor(this BitReader reader) => reader.ReadColor32();
+        
+        /// <summary>
+        /// Read a Color32 from the stream.
+        /// </summary>
+        /// <returns>The Color32 retrieved from the stream.</returns>
+        static public Color32 ReadColor32(this BitReader reader) => new Color32(reader.ReadByte(), reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
+
+        #endregion Color
+
+        #region Ray
+
+        /// <summary>
+        /// Write a Ray to the stream.
+        /// </summary>
+        /// <param name="ray">The Ray to write to the stream.</param>
+        static public void WriteRay(this BitWriter writer, Ray ray)
+        {
+            writer.WriteVector3(ray.origin);
+            writer.WriteVector3(ray.direction);
+        }
+
+        /// <summary>
+        /// Read a Ray from the stream.
+        /// </summary>
+        /// <returns>The Ray retrieved from the stream.</returns>
+        static public Ray ReadRay(this BitReader reader) => new Ray(reader.ReadVector3(), reader.ReadVector3());
+
+        #endregion Ray
+
+        #region Quaternion
+
+        /// <summary>
+        /// Write a Quaternion to the stream.
+        /// </summary>
+        /// <param name="rotation">The Quaternion to write to the stream.</param>
+        static public void WriteRotation(this BitWriter writer, Quaternion rotation)
+        {
+            writer.WriteFloat(rotation.x);
+            writer.WriteFloat(rotation.y);
+            writer.WriteFloat(rotation.z);
+            writer.WriteFloat(rotation.w);
+        }
+
+        /// <summary>
+        /// Read a Quaternion from the stream.
+        /// </summary>
+        /// <returns>The Quaternion retrieved from the stream.</returns>
+        static public Quaternion ReadRotation(this BitReader reader) => new Quaternion(reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat());
+
+        #endregion Quaternion
+    }
+}

@@ -5,20 +5,40 @@ using Elanetic.Tools.Serialization.Internal;
 
 namespace Elanetic.Tools.Serialization
 {
+    /// <summary>
+    /// A simple binary writer that will pack values as much as possible. It is recommended to only use BitReader to read data written by this class to reliably retrieve data.
+    /// </summary>
     public class BitWriter
     {
-        private Stream stream;
+        private Stream m_Stream;
 
+        /// <summary>
+        /// Create a BitWriter with a stream as it's target of writing.
+        /// </summary>
+        /// <param name="stream">The stream to write to.</param>
         public BitWriter(Stream stream)
         {
             if(stream == null) throw new ArgumentNullException(nameof(stream));
 
-            this.stream = stream;
+            m_Stream = stream;
         }
 
-        public void WriteByte(byte value) => stream.WriteByte(value);
-        public void WriteBool(bool value) => stream.WriteByte(value ? (byte)1 : (byte)0);
+        /// <summary>
+        /// Write a byte to the stream.
+        /// </summary>
+        /// <param name="value">The byte to write to the stream.</param>
+        public void WriteByte(byte value) => m_Stream.WriteByte(value);
 
+        /// <summary>
+        /// Write a bool to the stream.
+        /// </summary>
+        /// <param name="value">The bool to write to the stream.</param>
+        public void WriteBool(bool value) => m_Stream.WriteByte(value ? (byte)1 : (byte)0);
+
+        /// <summary>
+        /// Write a float to the stream.
+        /// </summary>
+        /// <param name="value">The float to write to the stream.</param>
         public void WriteFloat(float value)
         {
             WriteUInt(new UIntFloat
@@ -27,16 +47,40 @@ namespace Elanetic.Tools.Serialization
             }.uintValue);
         }
 
+        /// <summary>
+        /// Write a char to the stream.
+        /// </summary>
+        /// <param name="value">The char to write to the stream.</param>
         public void WriteChar(char value) => WriteULong(value);
 
+        /// <summary>
+        /// Write a signed short integer to the stream.
+        /// </summary>
+        /// <param name="value">The short to write to the stream.</param>
         public void WriteShort(short value) => WriteULong(BitConversion.ZigZagEncode(value));
 
+        /// <summary>
+        /// Write an unsigned short integer to the stream.
+        /// </summary>
+        /// <param name="value">The unsigned short to write to the stream.</param>
         public void WriteUShort(ushort value) => WriteULong(value);
 
+        /// <summary>
+        /// Write a signed integer to the stream.
+        /// </summary>
+        /// <param name="value">The int to write to the stream.</param>
         public void WriteInt(int value) => WriteULong(BitConversion.ZigZagEncode(value));
 
+        /// <summary>
+        /// Write an unsigned integer to the stream.
+        /// </summary>
+        /// <param name="value">The unsigned int to write to the stream.</param>
         public void WriteUInt(uint value) => WriteULong(value);
 
+        /// <summary>
+        /// Write a double to the stream.
+        /// </summary>
+        /// <param name="value">The double to write to the stream.</param>
         public void WriteDouble(double value)
         {
             WriteULong(new UIntFloat
@@ -45,8 +89,16 @@ namespace Elanetic.Tools.Serialization
             }.ulongValue);
         }
 
+        /// <summary>
+        /// Write a signed long integer to the stream.
+        /// </summary>
+        /// <param name="value">The long to write to the stream.</param>
         public void WriteLong(long value) => WriteULong(BitConversion.ZigZagEncode(value));
 
+        /// <summary>
+        /// Write an unsigned long integer to the stream.
+        /// </summary>
+        /// <param name="value">The unsigned long to write to the stream.</param>
         public void WriteULong(ulong value)
         {
             if (value <= 240) WriteByte((byte)value);
@@ -76,6 +128,10 @@ namespace Elanetic.Tools.Serialization
             }
         }
 
+        /// <summary>
+        /// Write a string to the stream. 2 bytes per character.
+        /// </summary>
+        /// <param name="value">The string to write to the stream.</param>
         public void WriteString(string value)
         {
             int length = value.Length;
@@ -84,8 +140,18 @@ namespace Elanetic.Tools.Serialization
             {
                 WriteByte((byte)value[i]);
                 WriteByte((byte)(value[i] >> 8));
-                //WriteChar(value[i]);
             }
+        }
+
+        /// <summary>
+        /// Write a byte array to the stream.
+        /// </summary>
+        /// <param name="byteArray">The array to write to the stream.</param>
+        public void WriteByteArray(byte[] byteArray)
+        {
+            ulong length = (ulong)byteArray.LongLength;
+            WriteULong(length);
+            for (ulong i = 0; i < length; ++i) WriteByte(byteArray[i]);
         }
     }
 }
