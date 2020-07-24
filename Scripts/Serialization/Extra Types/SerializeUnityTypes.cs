@@ -105,6 +105,47 @@ namespace Elanetic.Tools.Serialization
 
         #endregion Vector4
 
+        #region Vector2Int
+
+        /// <summary>
+        /// Write a Vector2Int to the stream.
+        /// </summary>
+        /// <param name="vector2Int">The Vector2Int to write to the stream.</param>
+        static public void WriteVector2Int(this BitWriter writer, Vector2Int vector2Int)
+        {
+            writer.WriteInt(vector2Int.x);
+            writer.WriteInt(vector2Int.y);
+        }
+
+        /// <summary>
+        /// Read a Vector2Int from the stream.
+        /// </summary>
+        /// <returns>The Vector2Int retrieved from the stream.</returns>
+        static public Vector2Int ReadVector2Int(this BitReader reader) => new Vector2Int(reader.ReadInt(), reader.ReadInt());
+
+        #endregion Vector2Int
+
+        #region Vector3Int
+
+        /// <summary>
+        /// Write a Vector3Int to the stream.
+        /// </summary>
+        /// <param name="vector3Int">The Vector3Int to write to the stream.</param>
+        static public void WriteVector3Int(this BitWriter writer, Vector3Int vector3Int)
+        {
+            writer.WriteInt(vector3Int.x);
+            writer.WriteInt(vector3Int.y);
+            writer.WriteInt(vector3Int.z);
+        }
+
+        /// <summary>
+        /// Read a Vector3Int from the stream.
+        /// </summary>
+        /// <returns>The Vector3Int retrieved from the stream.</returns>
+        static public Vector3Int ReadVector3Int(this BitReader reader) => new Vector3Int(reader.ReadInt(), reader.ReadInt(), reader.ReadInt());
+
+        #endregion Vector3Int
+
         #region Color
 
         /// <summary>
