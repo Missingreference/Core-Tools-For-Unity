@@ -221,5 +221,44 @@ namespace Elanetic.Tools.Serialization
         static public Quaternion ReadRotation(this BitReader reader) => new Quaternion(reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat(), reader.ReadFloat());
 
         #endregion Quaternion
+
+        #region Bounds
+
+        /// <summary>
+        /// Write a Bounds to the stream.
+        /// </summary>
+        /// <param name="bounds">The Bounds to write to the stream.</param>
+        static public void WriteBounds(this BitWriter writer, Bounds bounds)
+        {
+            writer.WriteVector3(bounds.center);
+            writer.WriteVector3(bounds.size);
+        }
+
+        /// <summary>
+        /// Read a Bounds from the stream.
+        /// </summary>
+        /// <returns>The Bounds retrieved from the stream.</returns>
+        static public Bounds ReadBounds(this BitReader reader) => new Bounds(reader.ReadVector3(), reader.ReadVector3());
+
+        #endregion Bounds
+
+        #region BoundsInt
+
+        /// <summary>
+        /// Write a BoundsInt to the stream.
+        /// </summary>
+        /// <param name="boundsInt">The BoundsInt to write to the stream.</param>
+        static public void WriteBoundsInt(this BitWriter writer, BoundsInt boundsInt)
+        {
+            writer.WriteVector3Int(boundsInt.position);
+            writer.WriteVector3Int(boundsInt.size);
+        }
+
+        /// <summary>
+        /// Read a BoundsInt from the stream.
+        /// </summary>
+        static public void ReadBoundsInt(this BitReader reader) => new BoundsInt(reader.ReadVector3Int(), reader.ReadVector3Int());
+
+        #endregion BoundsInt
     }
 }
