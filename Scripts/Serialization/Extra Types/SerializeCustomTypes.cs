@@ -17,7 +17,7 @@
         /// <summary>
         /// Read a BoundsInt2D from the stream.
         /// </summary>
-        static public void ReadBoundsInt2D(this BitReader reader) => new BoundsInt2D(reader.ReadVector2Int(), reader.ReadVector2Int());
+        static public BoundsInt2D ReadBoundsInt2D(this BitReader reader) => new BoundsInt2D(reader.ReadVector2Int(), reader.ReadVector2Int());
 
         #endregion BoundsInt2D
     }

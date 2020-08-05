@@ -257,7 +257,7 @@ namespace Elanetic.Tools.Serialization
         /// <summary>
         /// Read a BoundsInt from the stream.
         /// </summary>
-        static public void ReadBoundsInt(this BitReader reader) => new BoundsInt(reader.ReadVector3Int(), reader.ReadVector3Int());
+        static public BoundsInt ReadBoundsInt(this BitReader reader) => new BoundsInt(reader.ReadVector3Int(), reader.ReadVector3Int());
 
         #endregion BoundsInt
     }
