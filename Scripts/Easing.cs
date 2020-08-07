@@ -1096,22 +1096,22 @@ namespace Elanetic.Tools
 
         static public float Ease(float start, float finish, float timeElapsed, float finalTime, EasingFunction function)
         {
-            return Ease(start, finish, Mathf.Min(timeElapsed, finalTime) / finalTime, function);
+            return Ease(start, finish, Mathf.Clamp01(timeElapsed / finalTime), function);
         }
 
         static public Vector2 Ease(Vector2 start, Vector2 finish, float timeElapsed, float finalTime, EasingFunction function)
         {
-            return Ease(start, finish, Mathf.Min(timeElapsed, finalTime) / finalTime, function);
+            return Ease(start, finish, Mathf.Clamp01(timeElapsed / finalTime), function);
         }
 
         static public Vector3 Ease(Vector3 start, Vector3 finish, float timeElapsed, float finalTime, EasingFunction function)
         {
-            return Ease(start, finish, Mathf.Min(timeElapsed, finalTime) / finalTime, function);
+            return Ease(start, finish, Mathf.Clamp01(timeElapsed / finalTime), function);
         }
 
         static public Color Ease(Color start, Color finish, float timeElapsed, float finalTime, EasingFunction function)
         {
-            return Ease(start, finish, Mathf.Min(timeElapsed, finalTime) / finalTime, function);
+            return Ease(start, finish, Mathf.Clamp01(timeElapsed / finalTime), function);
         }
 
         static private Func<float, float, float, float> GetAssociatedEaseFunctionFloat(EasingFunction function)
