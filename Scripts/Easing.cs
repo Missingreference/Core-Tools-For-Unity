@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Profiling;
 
 namespace Elanetic.Tools
 {
-    /* 
-     * Functions taken from Tween.js - Licensed under the MIT license
-     * at https://github.com/sole/tween.js
-     */
+    /// <summary>
+    /// Functions taken from Tween.js - Licensed under the MIT license at https://github.com/sole/tween.js
+    ///
+    /// TODO: Test if GetAssociatedEaseFunctions are more performant using an array lookup than a switch.
+    /// TODO: Implement basic function for each class that only takes a percentage as a paremeter like the source js code.
+    /// TODO: Implement alternative function for each class that takes timeElapsed and finalTime similar to Ease functions.
+    /// </summary>
     static public class Easing
     {
         static public class Linear
@@ -42,26 +42,6 @@ namespace Elanetic.Tools
                     InOut(start.g, finish.g, percentage),
                     InOut(start.b, finish.b, percentage),
                     InOut(start.a, finish.a, percentage));
-            }
-
-            static public Automator InOutAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
             }
         }
 
@@ -160,66 +140,6 @@ namespace Elanetic.Tools
                     InOut(start.a, finish.a, percentage)
                     );
             }
-
-            static public Automator InAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
         };
 
         static public class Cubic
@@ -316,66 +236,6 @@ namespace Elanetic.Tools
                     InOut(start.b, finish.b, percentage),
                     InOut(start.a, finish.a, percentage)
                     );
-            }
-
-            static public Automator InAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
             }
         };
 
@@ -474,66 +334,6 @@ namespace Elanetic.Tools
                     InOut(start.a, finish.a, percentage)
                     );
             }
-
-            static public Automator InAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
         };
 
         static public class Quintic
@@ -631,66 +431,6 @@ namespace Elanetic.Tools
                     InOut(start.a, finish.a, percentage)
                     );
             }
-
-            static public Automator InAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
         };
 
         static public class Sinusoidal
@@ -786,66 +526,6 @@ namespace Elanetic.Tools
                     InOut(start.b, finish.b, percentage),
                     InOut(start.a, finish.a, percentage)
                     );
-            }
-
-            static public Automator InAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
             }
         };
 
@@ -946,66 +626,6 @@ namespace Elanetic.Tools
                     InOut(start.a, finish.a, percentage)
                     );
             }
-
-            static public Automator InAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
         };
 
         static public class Circular
@@ -1102,66 +722,6 @@ namespace Elanetic.Tools
                     InOut(start.b, finish.b, percentage),
                     InOut(start.a, finish.a, percentage)
                     );
-            }
-
-            static public Automator InAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
             }
         };
 
@@ -1264,66 +824,6 @@ namespace Elanetic.Tools
                     InOut(start.a, finish.a, percentage)
                     );
             }
-
-            static public Automator InAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
         };
 
         public class Back
@@ -1423,66 +923,6 @@ namespace Elanetic.Tools
                     InOut(start.b, finish.b, percentage),
                     InOut(start.a, finish.a, percentage)
                     );
-            }
-
-            static public Automator InAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
             }
         };
 
@@ -1597,66 +1037,6 @@ namespace Elanetic.Tools
                     InOut(start.a, finish.a, percentage)
                     );
             }
-
-            static public Automator InAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(float start, float finish, float time, Action<float> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(In, start, finish, time, setValueFunction);
-            }
-
-            static public Automator OutAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(Out, start, finish, time, setValueFunction);
-            }
-
-            static public Automator InOutAuto(Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                return new Automator(InOut, start, finish, time, setValueFunction);
-            }
         };
 
         public enum EasingFunction
@@ -1716,22 +1096,22 @@ namespace Elanetic.Tools
 
         static public float Ease(float start, float finish, float timeElapsed, float finalTime, EasingFunction function)
         {
-            return Ease(start, finish, timeElapsed / finalTime, function);
+            return Ease(start, finish, Mathf.Min(timeElapsed, finalTime) / finalTime, function);
         }
 
         static public Vector2 Ease(Vector2 start, Vector2 finish, float timeElapsed, float finalTime, EasingFunction function)
         {
-            return Ease(start, finish, timeElapsed / finalTime, function);
+            return Ease(start, finish, Mathf.Min(timeElapsed, finalTime) / finalTime, function);
         }
 
         static public Vector3 Ease(Vector3 start, Vector3 finish, float timeElapsed, float finalTime, EasingFunction function)
         {
-            return Ease(start, finish, timeElapsed / finalTime, function);
+            return Ease(start, finish, Mathf.Min(timeElapsed, finalTime) / finalTime, function);
         }
 
         static public Color Ease(Color start, Color finish, float timeElapsed, float finalTime, EasingFunction function)
         {
-            return Ease(start, finish, timeElapsed / finalTime, function);
+            return Ease(start, finish, Mathf.Min(timeElapsed, finalTime) / finalTime, function);
         }
 
         static private Func<float, float, float, float> GetAssociatedEaseFunctionFloat(EasingFunction function)
@@ -2015,241 +1395,6 @@ namespace Elanetic.Tools
                     return Bounce.InOut;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(function), function, null);
-            }
-        }
-
-
-        public class Automator
-        {
-
-            public Coroutine coroutine { get; private set; }
-            public bool isRunning { get; private set; } = true;
-            public float time { get; private set; }
-            public float elapsedTime { get; private set; } = 0.0f;
-            public float progress => Mathf.Clamp01(elapsedTime / time);
-            public Action onEasingFinished;
-
-
-            private bool m_IsSet = false;
-
-            //Float Constructor
-            public Automator(Func<float, float, float, float> easingFunction, float start, float finish, float time, Action<float> setValueFunction)
-            {
-                if(m_IsSet) return;
-
-                this.time = Mathf.Max(0.0f, time);
-
-                //Null Check
-                if(easingFunction == null)
-                {
-                    Debug.LogError("easingFunction parameter cannot be null.");
-                    isRunning = false;
-                    return;
-                }
-                if(setValueFunction == null)
-                {
-                    Debug.LogError("setValueFunction parameter cannot be null.");
-                    isRunning = false;
-                    return;
-                }
-
-                coroutine = Co.Run(DoEasing(easingFunction, start, finish, setValueFunction));
-
-                m_IsSet = true;
-            }
-
-            //Vector2 Constructor
-            public Automator(Func<Vector2, Vector2, float, Vector2> easingFunction, Vector2 start, Vector2 finish, float time, Action<Vector2> setValueFunction)
-            {
-                if(m_IsSet) return;
-
-                this.time = Mathf.Max(0.0f, time);
-
-                //Null Check
-                if(easingFunction == null)
-                {
-                    Debug.LogError("easingFunction parameter cannot be null.");
-                    isRunning = false;
-                    return;
-                }
-                if(setValueFunction == null)
-                {
-                    Debug.LogError("setValueFunction parameter cannot be null.");
-                    isRunning = false;
-                    return;
-                }
-
-                coroutine = Co.Run(DoEasing(easingFunction, start, finish, setValueFunction));
-
-                m_IsSet = true;
-            }
-
-            //Vector3 Constructor
-            public Automator(Func<Vector3, Vector3, float, Vector3> easingFunction, Vector3 start, Vector3 finish, float time, Action<Vector3> setValueFunction)
-            {
-                if(m_IsSet) return;
-
-                this.time = Mathf.Max(0.0f, time);
-
-                //Null Check
-                if(easingFunction == null)
-                {
-                    Debug.LogError("easingFunction parameter cannot be null.");
-                    isRunning = false;
-                    return;
-                }
-                if(setValueFunction == null)
-                {
-                    Debug.LogError("setValueFunction parameter cannot be null.");
-                    isRunning = false;
-                    return;
-                }
-
-                coroutine = Co.Run(DoEasing(easingFunction, start, finish, setValueFunction));
-
-                m_IsSet = true;
-            }
-
-            //Color Constructor
-            public Automator(Func<Color, Color, float, Color> easingFunction, Color start, Color finish, float time, Action<Color> setValueFunction)
-            {
-                if(m_IsSet) return;
-
-                this.time = Mathf.Max(0.0f, time);
-
-                //Null Check
-                if(easingFunction == null)
-                {
-                    Debug.LogError("easingFunction parameter cannot be null.");
-                    isRunning = false;
-                    return;
-                }
-                if(setValueFunction == null)
-                {
-                    Debug.LogError("setValueFunction parameter cannot be null.");
-                    isRunning = false;
-                    return;
-                }
-
-                coroutine = Co.Run(DoEasing(easingFunction, start, finish, setValueFunction));
-
-                m_IsSet = true;
-            }
-
-            //Enum Float Constructor
-            public Automator(EasingFunction easingFunction, float start, float finish, float time, Action<float> setValueFunction)
-            {
-                if(m_IsSet) return;
-
-                this.time = Mathf.Max(0.0f, time);
-
-                //Null Check
-                if(setValueFunction == null)
-                {
-                    Debug.LogError("setValueFunction parameter cannot be null.");
-                    isRunning = false;
-                    return;
-                }
-
-                coroutine = Co.Run(DoEasing(GetAssociatedEaseFunctionFloat(easingFunction), start, finish, setValueFunction));
-
-                m_IsSet = true;
-            }
-
-            public void Stop()
-            {
-                if(!isRunning) return;
-
-                Co.Stop(coroutine);
-                isRunning = false;
-                onEasingFinished?.Invoke();
-                CleanUp();
-            }
-
-            private void CleanUp()
-            {
-                onEasingFinished = null;
-                coroutine = null;
-            }
-
-            //Float iterator
-            private IEnumerator DoEasing(Func<float, float, float, float> func, float start, float finish, Action<float> setValueFunction)
-            {
-                if(Mathf.Approximately(time, 0.0f))
-                {
-                    setValueFunction.Invoke(finish);
-                }
-
-                while(elapsedTime < time)
-                {
-                    elapsedTime = Mathf.Min(time, elapsedTime + Time.deltaTime);
-                    setValueFunction.Invoke(func.Invoke(start, finish, Mathf.Clamp01(elapsedTime / time)));
-                    yield return null;
-                }
-
-                isRunning = false;
-                onEasingFinished?.Invoke();
-                CleanUp();
-            }
-
-            //Vector2 iterator
-            private IEnumerator DoEasing(Func<Vector2, Vector2, float, Vector2> func, Vector2 start, Vector2 finish, Action<Vector2> setValueFunction)
-            {
-                if(Mathf.Approximately(time, 0.0f))
-                {
-                    setValueFunction.Invoke(finish);
-                }
-
-                while(elapsedTime < time)
-                {
-                    elapsedTime = Mathf.Min(time, elapsedTime + Time.deltaTime);
-                    setValueFunction.Invoke(func.Invoke(start, finish, Mathf.Clamp01(elapsedTime / time)));
-                    yield return null;
-                }
-
-                isRunning = false;
-                onEasingFinished?.Invoke();
-                CleanUp();
-            }
-
-            //Vector3 iterator
-            private IEnumerator DoEasing(Func<Vector3, Vector3, float, Vector3> func, Vector3 start, Vector3 finish, Action<Vector3> setValueFunction)
-            {
-                if(Mathf.Approximately(time, 0.0f))
-                {
-                    setValueFunction.Invoke(finish);
-                }
-
-                while(elapsedTime < time)
-                {
-                    elapsedTime = Mathf.Min(time, elapsedTime + Time.deltaTime);
-                    setValueFunction.Invoke(func.Invoke(start, finish, Mathf.Clamp01(elapsedTime / time)));
-                    yield return null;
-                }
-
-                isRunning = false;
-                onEasingFinished?.Invoke();
-                CleanUp();
-            }
-
-            //Color iterator
-            private IEnumerator DoEasing(Func<Color, Color, float, Color> func, Color start, Color finish, Action<Color> setValueFunction)
-            {
-                if(Mathf.Approximately(time, 0.0f))
-                {
-                    setValueFunction.Invoke(finish);
-                }
-
-                while(elapsedTime < time)
-                {
-                    elapsedTime = Mathf.Min(time, elapsedTime + Time.deltaTime);
-                    setValueFunction.Invoke(func.Invoke(start, finish, Mathf.Clamp01(elapsedTime / time)));
-                    yield return null;
-                }
-
-                isRunning = false;
-                onEasingFinished?.Invoke();
-                CleanUp();
             }
         }
     }
