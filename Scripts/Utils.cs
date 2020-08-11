@@ -17,23 +17,67 @@ namespace Elanetic.Tools
         static private Texture2D m_ErrorTexture;
         static private Sprite m_ErrorSprite;
 
+        /// <summary>
+        /// Retrieve a random color. Alpha is always 100%.
+        /// </summary>
         static public Color GetRandomColor()
         {
             return new Color(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), 1.0f);
         }
 
+        /// <summary>
+        /// Converts a Color or Color32 to hexadecimal in the format of RRGGBBAA. No # symbol is included at the beginning.
+        /// </summary>
         static public string ColorToHex(Color32 color)
         {
             return color.r.ToString("X2") + color.g.ToString("X2") + color.b.ToString("X2") + color.a.ToString("X2");
         }
 
+        /// <summary>
+        /// Convert a hex string (in the format of RRGGBB, RRGGBBAA, #RRGGBB or #RRGGBBAA) to UnityEngine.Color. If no alpha channel inputted, it is set to 100%.
+        /// </summary>
         static public Color HexToColor(string hex)
         {
-            return new Color32(
-                byte.Parse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber),
-                byte.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber),
-                byte.Parse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber),
-                255);
+            if(hex[0] == '#')
+            {
+                if(hex.Length > 7)
+                {
+                    return new Color32(
+                        byte.Parse(hex.Substring(1, 2), System.Globalization.NumberStyles.HexNumber),
+                        byte.Parse(hex.Substring(3, 2), System.Globalization.NumberStyles.HexNumber),
+                        byte.Parse(hex.Substring(5, 2), System.Globalization.NumberStyles.HexNumber),
+                        byte.Parse(hex.Substring(7, 2), System.Globalization.NumberStyles.HexNumber)
+                        );
+                }
+                else
+                {
+                    return new Color32(
+                        byte.Parse(hex.Substring(1, 2), System.Globalization.NumberStyles.HexNumber),
+                        byte.Parse(hex.Substring(3, 2), System.Globalization.NumberStyles.HexNumber),
+                        byte.Parse(hex.Substring(5, 2), System.Globalization.NumberStyles.HexNumber),
+                        255);
+                }
+            }
+            else
+            {
+                if (hex.Length > 6)
+                {
+                    return new Color32(
+                        byte.Parse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber),
+                        byte.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber),
+                        byte.Parse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber),
+                        byte.Parse(hex.Substring(6, 2), System.Globalization.NumberStyles.HexNumber)
+                        );
+                }
+                else
+                {
+                    return new Color32(
+                        byte.Parse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber),
+                        byte.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber),
+                        byte.Parse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber),
+                        255);
+                }
+            }
         }
 
         static public int CoordToIndex(Vector2Int coord, BoundsInt2D bounds)
