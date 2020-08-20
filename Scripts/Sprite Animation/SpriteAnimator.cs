@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,32 +17,12 @@ namespace Elanetic.Tools
 		public bool destroyOnFinish = false;
 		public bool isPlaying { get; private set; } = false;
 		public int currentFrame { get; private set; } = 0;
+		public Sprite currentSprite { get; private set; } = null;
 
-		public SpriteRenderer spriteRenderer
-		{
-			get
-			{
-				if(m_SpriteRenderer == null)
-				{
-					m_SpriteRenderer = GetComponent<SpriteRenderer>();
-				}
-				return m_SpriteRenderer;
-			}
-		}
+		public SpriteRenderer targetSpriteRenderer { get; set; }
+		public Image targetImage { get; set; }
 
-		public Image image
-		{
-			get
-			{
-				if(m_Image == null)
-				{
-					m_Image = GetComponent<Image>();
-				}
-				return m_Image;
-			}
-		}
-
-		public SpriteAnimation animation
+		public new SpriteAnimation animation
 		{
 			get
 			{
@@ -63,15 +43,11 @@ namespace Elanetic.Tools
 
 		[SerializeField]
 		private SpriteAnimation m_SpriteAnimation;
-		private SpriteRenderer m_SpriteRenderer = null;
-		private Image m_Image = null;
 
 		private float m_Timer = 0.0f;
 
 		void OnEnable()
 		{
-			m_Image = GetComponent<Image>();
-			m_SpriteRenderer = GetComponent<SpriteRenderer>();
 			if(m_SpriteAnimation != null && m_SpriteAnimation.IsValid(false))
 			{
 				if (currentFrame > m_SpriteAnimation.frames.Length - 1)
@@ -86,18 +62,6 @@ namespace Elanetic.Tools
 		void Update()
 		{
 			if(!isPlaying) return;
-
-			if(m_Image == null && m_SpriteRenderer == null)
-			{
-				m_Image = GetComponent<Image>();
-				m_SpriteRenderer = GetComponent<SpriteRenderer>();
-				if(m_Image == null && m_SpriteRenderer == null)
-				{
-					enabled = false;
-					Debug.LogError("No Sprite Renderer or Image component is attached.");
-					return;
-				}
-			}
 
 			m_Timer += playbackSpeed * Time.deltaTime;
 
@@ -130,13 +94,9 @@ namespace Elanetic.Tools
 			}
 
 			isPlaying = true;
-			if(m_SpriteRenderer != null)
-				m_SpriteRenderer.enabled = true;
 
 			if(m_Timer == 0.0f && playbackSpeed < 0.0f)
 				m_Timer = 1.0f;
-			if(m_Image != null)
-				m_Image.enabled = true;
 		}
 
 		/// <summary>
@@ -269,34 +229,24 @@ namespace Elanetic.Tools
 				return;
 			}
 
-			if(m_Image == null && m_SpriteRenderer == null)
-			{
-				m_Image = GetComponent<Image>();
-				m_SpriteRenderer = GetComponent<SpriteRenderer>();
-				if(m_Image == null && m_SpriteRenderer == null)
-				{
-					enabled = false;
-					Debug.LogError("No Sprite Renderer or Image component is attached.");
-				}
-			}
-
 			Sprite sprite = m_SpriteAnimation.sprites[m_SpriteAnimation.frames[frameIndex]];
 
-			if(m_Image != null)
+			if(targetImage != null)
 			{
 				if(sprite == null)
-					m_Image.enabled = false;
+					targetImage.enabled = false;
 				else
-					m_Image.enabled = true;
-				m_Image.sprite = sprite;
+					targetImage.enabled = true;
+				targetImage.sprite = sprite;
 			}
 
-			if(m_SpriteRenderer != null)
+			if(targetSpriteRenderer != null)
 			{
-				m_SpriteRenderer.sprite = sprite;
+				targetSpriteRenderer.sprite = sprite;
 			}
 
 			currentFrame = frameIndex;
+			currentSprite = sprite;
 			onFrameChanged?.Invoke();
 		}
 
@@ -357,21 +307,15 @@ namespace Elanetic.Tools
 			if(m_SpriteAnimation == null || !m_SpriteAnimation.IsValid(false))
 			{
 				Stop();
-				if(m_Image == null && m_SpriteRenderer == null)
+				if(targetImage != null)
 				{
-					m_Image = GetComponent<Image>();
-					m_SpriteRenderer = GetComponent<SpriteRenderer>();
+					targetImage.enabled = false;
+					targetImage.sprite = null;
 				}
 
-				if(m_Image != null)
+				if(targetSpriteRenderer != null)
 				{
-					m_Image.enabled = false;
-					m_Image.sprite = null;
-				}
-
-				if(m_SpriteRenderer != null)
-				{
-					m_SpriteRenderer.sprite = null;
+					targetSpriteRenderer.sprite = null;
 				}
 			}
 			else
