@@ -29,16 +29,6 @@ namespace Elanetic.Tools
         private Dictionary<string, SpriteAnimation> m_Animations = new Dictionary<string, SpriteAnimation>();
         private string m_NextAnimation = "";
 
-        void Awake()
-        {
-
-        }
-
-        void Start()
-        {
-
-        }
-
         void OnEnable()
         {
             spriteAnimator = GetComponent<SpriteAnimator>();
@@ -48,11 +38,6 @@ namespace Elanetic.Tools
         private void OnDisable()
         {
             spriteAnimator.onFinishedAnimation -= OnAnimationFinished;
-        }
-
-        void Update()
-        {
-
         }
 
         #region Public Functions
