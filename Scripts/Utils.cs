@@ -90,9 +90,11 @@ namespace Elanetic.Tools
             return (coord.y * width) + coord.x;
         }
 
-        static public Vector2Int IndexToCoord(int index, BoundsInt2D bounds) //index 10 min -9 size 15, 10
+        static public Vector2Int IndexToCoord(int index, BoundsInt2D bounds)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD //For performance
             if(index < 0 || index > bounds.count) throw new IndexOutOfRangeException("Index '" + index + "' is not within the specified bounds. Index would end up being at the coord (" + ((index % bounds.size.x) + bounds.min.x).ToString() + "," + ((index / bounds.size.x) + bounds.min.y).ToString() + ") (Min: " + bounds.min + " Max: " + bounds.max + ") (Max index: " + bounds.count + ")");
+#endif
             return new Vector2Int((index % bounds.size.x) + bounds.min.x, (index / bounds.size.x) + bounds.min.y);
         }
 
