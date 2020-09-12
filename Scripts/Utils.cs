@@ -265,13 +265,30 @@ namespace Elanetic.Tools
             Debug.DrawLine(frontBottomLeft, backBottomLeft, color, duration, depthTest);
 
             //Center marker
-            centerMarkerSize = centerMarkerSize * 0.5f;
+            centerMarkerSize *= 0.5f;
             //X
             Debug.DrawLine(new Vector3(bounds.center.x - centerMarkerSize, bounds.center.y, bounds.center.z), new Vector3(bounds.center.x + centerMarkerSize, bounds.center.y, bounds.center.z), color, duration, depthTest);
             //Y
             Debug.DrawLine(new Vector3(bounds.center.x, bounds.center.y - centerMarkerSize, bounds.center.z), new Vector3(bounds.center.x, bounds.center.y + centerMarkerSize, bounds.center.z), color, duration, depthTest);
             //Z
             Debug.DrawLine(new Vector3(bounds.center.x, bounds.center.y, bounds.center.z - centerMarkerSize), new Vector3(bounds.center.x, bounds.center.y, bounds.center.z + centerMarkerSize), color, duration, depthTest);
+        }
+
+        static public Vector2 DegreesToVector2(float degrees)
+        {
+            return new Vector2(Mathf.Cos(degrees * Mathf.Deg2Rad), Mathf.Sin(degrees * Mathf.Deg2Rad));
+        }
+
+        static public float Vector2ToDegrees(Vector2 direction)
+        {
+            if (direction.y < 0.0f)
+                return -(Mathf.Acos(direction.x) * Mathf.Rad2Deg);
+            return Mathf.Acos(direction.x) * Mathf.Rad2Deg;
+        }
+
+        static public Vector2 RotateVector2(Vector2 direction, float degrees)
+        {
+            return DegreesToVector2(Vector2ToDegrees(direction) + degrees);
         }
     }
 }
