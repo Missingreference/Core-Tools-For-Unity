@@ -729,16 +729,16 @@ namespace Elanetic.Tools
         {
             static public float In(float start, float finish, float percentage)
             {
-                if(percentage == 0) return 0;
-                if(percentage == 1) return 1;
+                if(percentage == 0) return start;
+                if(percentage == 1) return finish;
                 float difference = finish - start;
                 return start + difference * (-Mathf.Pow(2f, 10f * (percentage -= 1f)) * Mathf.Sin((percentage - 0.1f) * (2f * Mathf.PI) / 0.4f));
             }
 
             static public float Out(float start, float finish, float percentage)
             {
-                if(percentage == 0) return 0;
-                if(percentage == 1) return 1;
+                if(percentage == 0) return start;
+                if(percentage == 1) return finish;
                 float difference = finish - start;
                 return start + difference * (Mathf.Pow(2f, -10f * percentage) * Mathf.Sin((percentage - 0.1f) * (2f * Mathf.PI) / 0.4f) + 1f);
             }
