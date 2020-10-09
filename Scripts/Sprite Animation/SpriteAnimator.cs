@@ -259,8 +259,13 @@ namespace Elanetic.Tools
 
 			SetFrame(Mathf.FloorToInt(m_SpriteAnimation.frames.Length * normalizedTime));
 			m_Timer = (m_SpriteAnimation.frames.Length * normalizedTime) % 1.0f;
-
 		}
+
+		public float GetAnimationTimeNormalized()
+        {
+			float timePerFrame = 1.0f / m_SpriteAnimation.frameCount;
+			return (currentFrame * timePerFrame) + (m_Timer * timePerFrame);
+        }
 
 		//"Shoots" an instance of this gameobject with custom settings for the SpriteAnimator to be destroyed upon the animation being complete
 		public void Shoot()
