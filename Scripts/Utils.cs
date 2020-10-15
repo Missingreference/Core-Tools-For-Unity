@@ -155,6 +155,24 @@ namespace Elanetic.Tools
             return m_ErrorTexture;
         }
 
+        static public Texture2D GetErrorTexture(int width, int height)
+        {
+            Texture2D texture = new Texture2D(width, height, TextureFormat.RGB24, false);
+            texture.filterMode = FilterMode.Point;
+            texture.wrapMode = TextureWrapMode.Repeat;
+            Color32[] pixels = new Color32[width * height];
+            for(int i = 0; i < pixels.Length; i++)
+            {
+                if(((i%width) + ((i/width) % 2)) % 2 == 0)
+                    pixels[i] = Color.black;
+                else
+                    pixels[i] = Color.magenta;
+            }
+            texture.SetPixels32(pixels);
+            texture.Apply();
+            return texture;
+        }
+
         static public Sprite GetErrorSprite()
         {
             if(m_ErrorSprite == null)
@@ -163,6 +181,11 @@ namespace Elanetic.Tools
             }
 
             return m_ErrorSprite;
+        }
+
+        static public Sprite GetErrorSprite(int width, int height)
+        {
+            return Sprite.Create(GetErrorTexture(width, height), new Rect(0,0,width,height), new Vector2(0.5f, 0.5f), 4.0f);
         }
 
         static public Texture2D PadTexture2D(Texture2D targetTexture, int amount)
