@@ -313,5 +313,15 @@ namespace Elanetic.Tools
         {
             return DegreesToVector2(Vector2ToDegrees(direction) + degrees);
         }
+
+        static public Vector2 RotateAround(Vector2 point, Vector2 center, float degrees)
+        {
+            float radians = Mathf.Deg2Rad * degrees;
+            float cosTheta = Mathf.Cos(radians);
+            float sinTheta = Mathf.Sin(radians);
+
+            return new Vector2((cosTheta * (point.x - center.x) - sinTheta * (point.y - center.y) + center.x),
+                          (sinTheta * (point.x - center.x) + cosTheta * (point.y - center.y) + center.y));
+        }
     }
 }
