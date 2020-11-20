@@ -20,11 +20,6 @@ namespace Elanetic.Tools
     public class SpriteDirector : MonoBehaviour
     {
         public SpriteAnimator spriteAnimator { get; private set; }
-        public string currentAnimationName { get; private set; } = null;
-        /// <summary>
-        /// If true, calling play for the same animation as the 'currentAnimation' will restart the animation. Setting to false would be good for if calling play constantly.
-        /// </summary>
-        public bool resetOnSamePlayingAnimation { get; set; }
 
         private Dictionary<string, SpriteAnimation> m_Animations = new Dictionary<string, SpriteAnimation>();
         private string m_NextAnimation = "";
@@ -85,7 +80,7 @@ namespace Elanetic.Tools
                 return;
             }
 
-            if(currentAnimationName == animationName)
+            if(spriteAnimator.animation.animationName == animationName)
             {
                 //The animation we want to remove is currently playing. Stop the animation and remove the sprites from the SpriteAnimator. 
                 spriteAnimator.Stop();
@@ -185,21 +180,12 @@ namespace Elanetic.Tools
                 return;
             }
 
-            if(!resetOnSamePlayingAnimation && animationName == currentAnimationName)
-            {
-                //Animation won't reset if the animations are the same.
-                spriteAnimator.loop = loop;
-                spriteAnimator.playbackSpeed = playbackSpeed;
-                return;
-            }
-
             spriteAnimator.animation = m_Animations[animationName];
             spriteAnimator.Stop();
             spriteAnimator.loop = loop;
             spriteAnimator.playbackSpeed = playbackSpeed;
             spriteAnimator.SetFrame(startFrame);
             spriteAnimator.Play();
-            currentAnimationName = animationName;
         }
 
         public void PlayOnceThenLoop(string firstAnimationName, string secondLoopingAnimation)
