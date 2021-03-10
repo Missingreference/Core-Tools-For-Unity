@@ -147,9 +147,17 @@ namespace Elanetic.Tools.Serialization
         /// Write a byte array to the stream.
         /// </summary>
         /// <param name="byteArray">The array to write to the stream.</param>
-        public void WriteByteArray(byte[] byteArray)
+        public void WriteByteArray(byte[] byteArray) => WriteByteArray(byteArray, byteArray.LongLength);
+
+        /// <summary>
+        /// Write a byte array to the stream but limited to inputted count.
+        /// </summary>
+        /// <param name="byteArray">The array to write to the stream.</param>
+        /// <param name="count">The amount of bytes to write starting from the zero index.</param>
+        public void WriteByteArray(byte[] byteArray, long count)
         {
             ulong length = (ulong)byteArray.LongLength;
+            if(length > (ulong)count) length = (ulong)count;
             WriteULong(length);
             for (ulong i = 0; i < length; ++i) WriteByte(byteArray[i]);
         }

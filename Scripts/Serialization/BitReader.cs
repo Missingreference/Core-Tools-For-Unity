@@ -146,6 +146,7 @@ namespace Elanetic.Tools.Serialization
             if (byteArray == null) throw new ArgumentNullException(nameof(byteArray));
             ulong dataLength = ReadULong();
             ulong readLength = (ulong)byteArray.LongLength;
+            if(dataLength < readLength) readLength = dataLength;
             for (ulong i = 0; i < readLength; i++) byteArray[i] = ReadByte();
 
             if(readLength < dataLength)
