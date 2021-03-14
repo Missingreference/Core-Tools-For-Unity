@@ -1,14 +1,12 @@
 ﻿///This script will 'direct' a SpriteAnimator script on what animations to play.
 /// Features:
 /// -Have a dictionary of animations to choose from.
-/// -Play another animation once one animation has finished.
 /// -
-///
 /// Use the attached SpriteAnimator component to change the playback speed, loop or current frame setting. Use that component to pause/stop as well.
 ///TODO: What if AddAnimation and RemoveAnimation are called while the animation is playing(currentAnimation)?
+///TODO: Be able to play animation by simply calling Play(int) for better performance. Can be useful for cases such as a character uses an enum for tracking various animations and thus can call Play((int)enum);
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -20,19 +18,13 @@ namespace Elanetic.Tools
     public class SpriteDirector : MonoBehaviour
     {
         public SpriteAnimator spriteAnimator { get; private set; }
+        public int animationCount { get; private set; }
 
         private Dictionary<string, SpriteAnimation> m_Animations = new Dictionary<string, SpriteAnimation>();
-        private string m_NextAnimation = "";
 
-        void OnEnable()
+        void Awake()
         {
             spriteAnimator = GetComponent<SpriteAnimator>();
-            spriteAnimator.onFinishedAnimation += OnAnimationFinished;
-        }
-
-        private void OnDisable()
-        {
-            spriteAnimator.onFinishedAnimation -= OnAnimationFinished;
         }
 
         #region Public Functions
@@ -56,6 +48,7 @@ namespace Elanetic.Tools
             }
 
             m_Animations.Add(animation.animationName, animation);
+            animationCount = m_Animations.Count;
         }
 
         public void AddAnimations(SpriteAnimation[] animations)
@@ -85,15 +78,10 @@ namespace Elanetic.Tools
                 //The animation we want to remove is currently playing. Stop the animation and remove the sprites from the SpriteAnimator. 
                 spriteAnimator.Stop();
                 spriteAnimator.animation = null;
-                //Should the next animation be played if it exists? //OnAnimationFinished();
-            }
-
-            if(animationName == m_NextAnimation)
-            {
-                m_NextAnimation = "";
             }
 
             m_Animations.Remove(animationName);
+            animationCount = m_Animations.Count;
         }
 
         public void RemoveAllAnimations()
@@ -107,6 +95,7 @@ namespace Elanetic.Tools
 
         public string[] GetAnimationNames()
         {
+            //TODO: Bad performance
             return m_Animations.Keys.ToArray();
         }
 
@@ -130,7 +119,7 @@ namespace Elanetic.Tools
             return animations;
         }
 
-        //Use this one if you want to use whatever settings that are already set on the Sprite Animator or if you want to set it yourself somewhere else
+        //Use this one if you want to use whatever settings that are already set in the Sprite Animation.
         public void Play(string animationName)
         {
             Play(animationName, spriteAnimator.loop, spriteAnimator.playbackSpeed, 0);
@@ -174,62 +163,93 @@ namespace Elanetic.Tools
                 return;
             }
 
-            if(!m_Animations.ContainsKey(animationName))
+            if(m_Animations.TryGetValue(animationName, out SpriteAnimation animation))
             {
-                Debug.LogError("Cannot play animation. Animation with the name '" + animationName + "' does not exist.");
-                return;
+                //Play(animation, loop, playbackSpeed, startFrame);
+                PlayAnimation(animation, loop, playbackSpeed, startFrame);
             }
+            else
+            {
+                //When this error occurs, make sure to call AddAnimation with the animation you want SpriteDirector to remember.
+                Debug.LogError("Cannot play animation. Animation with the name '" + animationName + "' does not exist.");
+            }
+        }
 
-            spriteAnimator.animation = m_Animations[animationName];
+        public void Play(SpriteAnimation animation)
+        {
+            VerifyAnimation(animation);
+
+            PlayAnimation(animation, animation.loop, animation.animationSpeed, 0);
+        }
+
+        public void Play(SpriteAnimation animation, bool loop)
+        {
+            VerifyAnimation(animation);
+
+            PlayAnimation(animation, loop, animation.animationSpeed, 0);
+        }
+
+        public void Play(SpriteAnimation animation, float playbackSpeed)
+        {
+            VerifyAnimation(animation);
+
+            PlayAnimation(animation, animation.loop, playbackSpeed, 0);
+        }
+
+        public void Play(SpriteAnimation animation, int startFrame)
+        {
+            VerifyAnimation(animation);
+
+            PlayAnimation(animation, animation.loop, animation.animationSpeed, startFrame);
+        }
+
+        public void Play(SpriteAnimation animation, bool loop, float playbackSpeed)
+        {
+            VerifyAnimation(animation);
+
+            PlayAnimation(animation, loop, playbackSpeed, 0);
+        }
+
+        public void Play(SpriteAnimation animation, bool loop, int startFrame)
+        {
+
+            VerifyAnimation(animation);
+
+            PlayAnimation(animation, loop, animation.animationSpeed, startFrame);
+        }
+
+        public void Play(SpriteAnimation animation, float playbackSpeed, int startFrame)
+        {
+            VerifyAnimation(animation);
+
+            PlayAnimation(animation, animation.loop, playbackSpeed, startFrame);
+        }
+
+        public void Play(SpriteAnimation animation, bool loop, float playbackSpeed, int startFrame)
+        {
+            VerifyAnimation(animation);
+
+            PlayAnimation(animation, loop, playbackSpeed, startFrame);
+        }
+
+        //Called when attempting to play a SpriteAnimation.
+        private void VerifyAnimation(SpriteAnimation animation)
+        {
+            if(animation == null) throw new NullReferenceException("Sprite Animation cannot be null.");
+
+            if(!animation.IsValid(false)) throw new InvalidOperationException("Cannot play invalid Sprite Animation.");
+
+            if(!m_Animations.ContainsValue(animation)) throw new InvalidOperationException("Cannot play animation. The animation has not been added to the Sprite Director.");
+        }
+
+        private void PlayAnimation(SpriteAnimation animation, bool loop, float playbackSpeed, int startFrame)
+        {
+            spriteAnimator.animation = animation;
             spriteAnimator.Stop();
             spriteAnimator.loop = loop;
             spriteAnimator.playbackSpeed = playbackSpeed;
             spriteAnimator.SetFrame(startFrame);
             spriteAnimator.Play();
-        }
-
-        public void PlayOnceThenLoop(string firstAnimationName, string secondLoopingAnimation)
-        {
-            if(String.IsNullOrEmpty(firstAnimationName))
-            {
-                Debug.LogError("Cannot play animation. First Animation parameter cannot be null or empty.");
-                return;
-            }
-
-            if(!m_Animations.ContainsKey(firstAnimationName))
-            {
-                Debug.LogError("Cannot play animation. Animation with the name '" + firstAnimationName + "' does not exist.");
-                return;
-            }
-
-            Play(firstAnimationName, false);
-
-
-            if(String.IsNullOrEmpty(secondLoopingAnimation))
-            {
-                Debug.LogError("Cannot play animation. Second Animation parameter cannot be null or empty.");
-                return;
-            }
-
-            if(!m_Animations.ContainsKey(secondLoopingAnimation))
-            {
-                Debug.LogError("Cannot play animation. Animation with the name '" + secondLoopingAnimation + "' does not exist.");
-                return;
-            }
-            m_NextAnimation = secondLoopingAnimation;
-        }
-
-        #endregion
-
-        #region Private Functions
-
-        private void OnAnimationFinished()
-        {
-            if(m_NextAnimation != "")
-            {
-                Play(m_NextAnimation, true);
-                m_NextAnimation = "";
-            }
         }
 
         #endregion
