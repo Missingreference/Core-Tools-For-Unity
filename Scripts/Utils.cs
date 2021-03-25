@@ -215,50 +215,23 @@ namespace Elanetic.Tools
             return finalTexture;
         }
 
-        static public void DrawBounds(BoundsInt bounds)
-        {
-            DrawBounds(new Bounds(bounds.center, bounds.size));
-        }
+        static public void DrawBounds(BoundsInt bounds) => DrawBounds(new Bounds(bounds.center, bounds.size));
 
-        static public void DrawBounds(BoundsInt bounds, float centerMarkerSize)
-        {
-            DrawBounds(new Bounds(bounds.center, bounds.size), centerMarkerSize, Color.white, 0.0f, true);
-        }
+        static public void DrawBounds(BoundsInt bounds, float centerMarkerSize) => DrawBounds(new Bounds(bounds.center, bounds.size), centerMarkerSize, Color.red, 0.0f, true);
 
-        static public void DrawBounds(BoundsInt bounds, float centerMarkerSize, Color color)
-        {
-            DrawBounds(new Bounds(bounds.center, bounds.size), centerMarkerSize, color, 0.0f, true);
-        }
+        static public void DrawBounds(BoundsInt bounds, float centerMarkerSize, Color color) => DrawBounds(new Bounds(bounds.center, bounds.size), centerMarkerSize, color, 0.0f, true);
 
-        static public void DrawBounds(BoundsInt bounds, float centerMarkerSize, Color color, float duration)
-        {
-            DrawBounds(new Bounds(bounds.center, bounds.size), centerMarkerSize, color, duration, true);
-        }
+        static public void DrawBounds(BoundsInt bounds, float centerMarkerSize, Color color, float duration) => DrawBounds(new Bounds(bounds.center, bounds.size), centerMarkerSize, color, duration, true);
 
-        static public void DrawBounds(BoundsInt bounds, float centerMarkerSize, Color color, float duration, bool depthTest)
-        {
-            DrawBounds(new Bounds(bounds.center, bounds.size), centerMarkerSize, color, duration, depthTest);
-        }
+        static public void DrawBounds(BoundsInt bounds, float centerMarkerSize, Color color, float duration, bool depthTest) => DrawBounds(new Bounds(bounds.center, bounds.size), centerMarkerSize, color, duration, depthTest);
 
-        static public void DrawBounds(Bounds bounds)
-        {
-            DrawBounds(bounds, 0.0f, Color.white, 0.0f, true);
-        }
+        static public void DrawBounds(Bounds bounds) => DrawBounds(bounds, 0.0f, Color.red, 0.0f, true);
 
-        static public void DrawBounds(Bounds bounds, float centerMarkerSize)
-        {
-            DrawBounds(bounds, centerMarkerSize, Color.white, 0.0f, true);
-        }
+        static public void DrawBounds(Bounds bounds, float centerMarkerSize) => DrawBounds(bounds, centerMarkerSize, Color.red, 0.0f, true);
 
-        static public void DrawBounds(Bounds bounds, float centerMarkerSize, Color color)
-        {
-            DrawBounds(bounds, centerMarkerSize, color, 0.0f, true);
-        }
+        static public void DrawBounds(Bounds bounds, float centerMarkerSize, Color color) => DrawBounds(bounds, centerMarkerSize, color, 0.0f, true);
 
-        static public void DrawBounds(Bounds bounds, float centerMarkerSize, Color color, float duration)
-        {
-            DrawBounds(bounds, centerMarkerSize, color, duration, true);
-        }
+        static public void DrawBounds(Bounds bounds, float centerMarkerSize, Color color, float duration) => DrawBounds(bounds, centerMarkerSize, color, duration, true);
 
         static public void DrawBounds(Bounds bounds, float centerMarkerSize, Color color, float duration, bool depthTest)
         {
@@ -295,6 +268,18 @@ namespace Elanetic.Tools
             Debug.DrawLine(new Vector3(bounds.center.x, bounds.center.y - centerMarkerSize, bounds.center.z), new Vector3(bounds.center.x, bounds.center.y + centerMarkerSize, bounds.center.z), color, duration, depthTest);
             //Z
             Debug.DrawLine(new Vector3(bounds.center.x, bounds.center.y, bounds.center.z - centerMarkerSize), new Vector3(bounds.center.x, bounds.center.y, bounds.center.z + centerMarkerSize), color, duration, depthTest);
+        }
+
+        static public void DrawPoint(Vector3 point) => DrawPoint(point, 1.0f, Color.red, 0.0f, true);
+        static public void DrawPoint(Vector3 point, float size) => DrawPoint(point, size, Color.red, 0.0f, true);
+
+        static public void DrawPoint(Vector3 point, float size, Color color) => DrawPoint(point, size, color, 0.0f, true);
+
+        static public void DrawPoint(Vector3 point, float size, Color color, float duration) => DrawPoint(point, size, color, duration, true);
+
+        static public void DrawPoint(Vector3 point, float size, Color color, float duration, bool depthTest)
+        {
+            DrawBounds(new Bounds(point, new Vector3(size * 0.5f, size * 0.5f, size * 0.5f)), size, color, duration, depthTest);
         }
 
         static public Vector2 DegreesToVector2(float degrees)
