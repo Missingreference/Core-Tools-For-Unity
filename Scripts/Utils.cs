@@ -215,6 +215,41 @@ namespace Elanetic.Tools
             return finalTexture;
         }
 
+        /// <summary>
+        /// Split texture using sprite information. Make sure each inputted sprite uses the same source texture.
+        /// </summary>
+        /// <param name="sprites"></param>
+        /// <returns></returns>
+        static public Texture2D[] SeperateTexturesFromSprites(Sprite[] sprites)
+        {
+            Texture2D[] resultTextures = new Texture2D[sprites.Length];
+
+            Texture2D sourceTexture = sprites[0].texture;
+            Color32[] sourcePixels = sourceTexture.GetPixels32();
+
+            for(int i = 0; i < sprites.Length; i++)
+            {
+                Sprite sprite = sprites[i];
+                if(sprite.texture != sourceTexture) throw new InvalidOperationException("Each inputted sprite must have the same source texture.");
+                if(sprite == null) throw new NullReferenceException("Inputted sprite is null at index " + i.ToString() + ".");
+
+                resultTextures[i] = new Texture2D((int)sprite.rect.size.x, (int)sprite.rect.size.y, sourceTexture.format, false);
+                int pixelCount = (int)(sprite.rect.size.x * sprite.rect.size.y);
+                Color32[] pixels = new Color32[pixelCount];
+                for(int h = 0; h < pixelCount; h++)
+                {
+                    Vector2Int pixel = Utils.IndexToCoord(h, (int)sprite.rect.size.x);
+                    //TODO Use SetPixelData instead for performance
+                    int index = Utils.CoordToIndex(pixel + new Vector2Int((int)sprite.rect.position.x, (int)(sprite.rect.position.y)), sourceTexture.width);
+                    pixels[h] = sourcePixels[index];
+                }
+                resultTextures[i].SetPixels32(pixels);
+                resultTextures[i].Apply();
+            }
+
+            return resultTextures;
+        }
+
         static public void DrawBounds(BoundsInt bounds) => DrawBounds(new Bounds(bounds.center, bounds.size));
 
         static public void DrawBounds(BoundsInt bounds, float centerMarkerSize) => DrawBounds(new Bounds(bounds.center, bounds.size), centerMarkerSize, Color.red, 0.0f, true);
