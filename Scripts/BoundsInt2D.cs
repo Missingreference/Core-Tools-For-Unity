@@ -25,14 +25,12 @@ namespace Elanetic.Tools
 
         public BoundsInt2D(Vector2Int min, int xSize, int ySize)
         {
+#if SAFE_EXECUTION
             if(xSize < 0)
-            {
                 throw new ArgumentException("xSize parameter cannot be less than zero. Received '" + xSize + "'.", nameof(xSize));
-            }
-            if(ySize < 0)
-            {
+            if (ySize < 0)
                 throw new ArgumentException("ySize parameter cannot be less than zero. Received '" + ySize + "'.", nameof(ySize));
-            }
+#endif
 
             this.min = min;
             this.max = new Vector2Int(min.x + Mathf.Max(0, xSize - 1), min.y + Mathf.Max(0, ySize - 1));
@@ -43,12 +41,14 @@ namespace Elanetic.Tools
 
         public BoundsInt2D(Vector2Int min, Vector2Int max)
         {
+#if SAFE_EXECUTION  
             if(max.x < min.x && max.y < min.y)
                 throw new ArgumentException("Bounds maximum position cannot be smaller than the minimum position. Min: " + min.ToString() + " Max: " + max.ToString(), nameof(max));
             if(max.x < min.x)
                 throw new ArgumentException("Bounds maximum 'x' position cannot be smaller than the minimum position.", nameof(max));
             if(max.y < min.y)
                 throw new ArgumentException("Bounds maximum 'y' position cannot be smaller than the minimum position.", nameof(max));
+#endif
 
             this.min = min;
             this.max = max;

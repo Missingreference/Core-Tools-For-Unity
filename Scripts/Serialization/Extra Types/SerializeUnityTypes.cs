@@ -13,7 +13,10 @@ namespace Elanetic.Tools.Serialization
         /// <param name="texture2D">The Texture2D to write to the stream.</param>
         public static void WriteTexture2D(this BitWriter writer, Texture2D texture2D)
         {
-            if(texture2D == null) throw new ArgumentNullException(nameof(texture2D));
+#if SAFE_EXECUTION
+            if(texture2D == null) 
+                throw new ArgumentNullException(nameof(texture2D), "Inputted texture is null.");
+#endif
 
             writer.WriteInt(texture2D.width);
             writer.WriteInt(texture2D.height);

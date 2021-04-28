@@ -31,21 +31,16 @@ namespace Elanetic.Tools
 
         public void AddAnimation(SpriteAnimation animation)
         {
+#if SAFE_EXECUTION
             if(string.IsNullOrEmpty(animation.animationName))
-            {
                 throw new ArgumentException("Cannot add animation. The name of the Sprite Animation cannot be null or empty.", nameof(animation));
-            }
 
-            if(animation == null)
-            {
+            if (animation == null)
                 throw new ArgumentNullException(nameof(animation), "The inputted Sprite Animation cannot be null.");
-            }
 
-            if(m_Animations.ContainsKey(animation.animationName))
-            {
-                Debug.LogError("Cannot add animation. Animation with the name '" + animation.animationName + "' already exists as an animation.");
-                return;
-            }
+            if (m_Animations.ContainsKey(animation.animationName))
+                throw new InvalidOperationException("Cannot add animation. Animation with the name '" + animation.animationName + "' already exists as an animation.");
+#endif
 
             m_Animations.Add(animation.animationName, animation);
             animationCount = m_Animations.Count;
@@ -177,35 +172,45 @@ namespace Elanetic.Tools
 
         public void Play(SpriteAnimation animation)
         {
+#if SAFE_EXECUTION
             VerifyAnimation(animation);
+#endif
 
             PlayAnimation(animation, animation.loop, animation.animationSpeed, 0);
         }
 
         public void Play(SpriteAnimation animation, bool loop)
         {
+#if SAFE_EXECUTION
             VerifyAnimation(animation);
+#endif
 
             PlayAnimation(animation, loop, animation.animationSpeed, 0);
         }
 
         public void Play(SpriteAnimation animation, float playbackSpeed)
         {
+#if SAFE_EXECUTION
             VerifyAnimation(animation);
+#endif
 
             PlayAnimation(animation, animation.loop, playbackSpeed, 0);
         }
 
         public void Play(SpriteAnimation animation, int startFrame)
         {
+#if SAFE_EXECUTION
             VerifyAnimation(animation);
+#endif
 
             PlayAnimation(animation, animation.loop, animation.animationSpeed, startFrame);
         }
 
         public void Play(SpriteAnimation animation, bool loop, float playbackSpeed)
         {
+#if SAFE_EXECUTION
             VerifyAnimation(animation);
+#endif
 
             PlayAnimation(animation, loop, playbackSpeed, 0);
         }
@@ -213,21 +218,27 @@ namespace Elanetic.Tools
         public void Play(SpriteAnimation animation, bool loop, int startFrame)
         {
 
+#if SAFE_EXECUTION
             VerifyAnimation(animation);
+#endif
 
             PlayAnimation(animation, loop, animation.animationSpeed, startFrame);
         }
 
         public void Play(SpriteAnimation animation, float playbackSpeed, int startFrame)
         {
+#if SAFE_EXECUTION
             VerifyAnimation(animation);
+#endif
 
             PlayAnimation(animation, animation.loop, playbackSpeed, startFrame);
         }
 
         public void Play(SpriteAnimation animation, bool loop, float playbackSpeed, int startFrame)
         {
+#if SAFE_EXECUTION
             VerifyAnimation(animation);
+#endif
 
             PlayAnimation(animation, loop, playbackSpeed, startFrame);
         }

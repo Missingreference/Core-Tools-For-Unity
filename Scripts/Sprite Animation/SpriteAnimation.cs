@@ -25,8 +25,12 @@ namespace Elanetic.Tools
         //Assumes that the inputted sprites are the frames
         public SpriteAnimation(string animationName, Sprite[] sprites, float animationSpeed, bool loop)
         {
-            if (string.IsNullOrWhiteSpace(animationName)) throw new ArgumentException("Argument 'animationName' cannot be null or whitespace.");
-            if (sprites == null || sprites.Length == 0) throw new ArgumentException("Argument 'sprites' cannot be null or an empty array.");
+#if SAFE_EXECUTION
+            if (string.IsNullOrWhiteSpace(animationName)) 
+                throw new ArgumentException("Argument 'animationName' cannot be null or whitespace.");
+            if (sprites == null || sprites.Length == 0) 
+                throw new ArgumentException("Argument 'sprites' cannot be null or an empty array.");
+#endif
 
             this.animationName = animationName;
             this.sprites = sprites;
@@ -45,9 +49,14 @@ namespace Elanetic.Tools
 
         public SpriteAnimation(string animationName, Sprite[] sprites, float animationSpeed, bool loop, params int[] animationFrames)
         {
-            if(string.IsNullOrWhiteSpace(animationName)) throw new ArgumentException("Argument 'animationName' cannot be null or whitespace.");
-            if (sprites == null || sprites.Length == 0) throw new ArgumentException("Argument 'sprites' cannot be null or an empty array.");
-            if (animationFrames == null || animationFrames.Length == 0) throw new ArgumentException("Argument 'animationFrames' cannot be null or an empty array.");
+#if SAFE_EXECUTION
+            if(string.IsNullOrWhiteSpace(animationName)) 
+                throw new ArgumentException("Argument 'animationName' cannot be null or whitespace.");
+            if (sprites == null || sprites.Length == 0) 
+                throw new ArgumentException("Argument 'sprites' cannot be null or an empty array.");
+            if (animationFrames == null || animationFrames.Length == 0) 
+                throw new ArgumentException("Argument 'animationFrames' cannot be null or an empty array.");
+#endif
 
             this.animationName = animationName;
             this.sprites = sprites;
@@ -79,7 +88,10 @@ namespace Elanetic.Tools
         /// <returns></returns>
         public Sprite GetFrame(int frameIndex)
         {
-            if (frameIndex < 0 || frameIndex > frames.Length - 1) throw new IndexOutOfRangeException("Argument 'frameIndex' must be more than or equal to zero and a valid index within the size of the sprites array.");
+#if SAFE_EXECUTION
+            if (frameIndex < 0 || frameIndex > frames.Length - 1) 
+                throw new IndexOutOfRangeException("Argument 'frameIndex' must be more than or equal to zero and a valid index within the size of the sprites array.");
+#endif
             return sprites[frames[frameIndex]];
         }
     }

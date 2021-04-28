@@ -15,11 +15,13 @@ namespace Elanetic.Tools
 
         public ChunkedOutwardList(int chunkSize = 16)
         {
+#if SAFE_EXECUTION
             if(chunkSize <= 0)
             {
                 //Also if your setting your chunk size to a really low number, your missing out on the performance of this class. Too large and your allocating too much and leaving more potentially unused memory.
                 throw new ArgumentException("The chunk size must be larger than zero.", nameof(chunkSize));
             }
+#endif
 
             m_ChunkSize = chunkSize;
             m_Chunks = new OutwardList<T[]>();

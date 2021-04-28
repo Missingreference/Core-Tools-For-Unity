@@ -92,8 +92,9 @@ namespace Elanetic.Tools
 
         static public Vector2Int IndexToCoord(int index, BoundsInt2D bounds)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD //For performance
-            if(index < 0 || index > bounds.count) throw new IndexOutOfRangeException("Index '" + index + "' is not within the specified bounds. Index would end up being at the coord (" + ((index % bounds.size.x) + bounds.min.x).ToString() + "," + ((index / bounds.size.x) + bounds.min.y).ToString() + ") (Min: " + bounds.min + " Max: " + bounds.max + ") (Max index: " + bounds.count + ")");
+#if SAFE_EXECUTION
+            if(index < 0 || index > bounds.count) 
+                throw new IndexOutOfRangeException("Index '" + index + "' is not within the specified bounds. Index would end up being at the coord (" + ((index % bounds.size.x) + bounds.min.x).ToString() + "," + ((index / bounds.size.x) + bounds.min.y).ToString() + ") (Min: " + bounds.min + " Max: " + bounds.max + ") (Max index: " + bounds.count + ")");
 #endif
             return new Vector2Int((index % bounds.size.x) + bounds.min.x, (index / bounds.size.x) + bounds.min.y);
         }
@@ -195,8 +196,12 @@ namespace Elanetic.Tools
 
         static public Texture2D PadTexture2D(Texture2D targetTexture, int amount, Color color)
         {
-            if(targetTexture == null) throw new ArgumentNullException(nameof(targetTexture));
-            if(amount <= 0) throw new ArgumentException("Argument 'amount' must be more than zero.", nameof(amount));
+#if SAFE_EXECUTION
+            if (targetTexture == null) 
+                throw new ArgumentNullException(nameof(targetTexture), "Inputted texture is null.");
+            if(amount <= 0) 
+                throw new ArgumentException("Argument 'amount' must be more than zero.", nameof(amount));
+#endif
 
             Texture2D finalTexture = new Texture2D(targetTexture.width+(amount*2), targetTexture.height+(amount*2), targetTexture.format, false);
 
@@ -230,8 +235,12 @@ namespace Elanetic.Tools
             for(int i = 0; i < sprites.Length; i++)
             {
                 Sprite sprite = sprites[i];
-                if(sprite.texture != sourceTexture) throw new InvalidOperationException("Each inputted sprite must have the same source texture.");
-                if(sprite == null) throw new NullReferenceException("Inputted sprite is null at index " + i.ToString() + ".");
+#if SAFE_EXECUTION
+                if(sprite.texture != sourceTexture) 
+                    throw new InvalidOperationException("Each inputted sprite must have the same source texture.");
+                if(sprite == null) 
+                    throw new NullReferenceException("Inputted sprite is null at index " + i.ToString() + ".");
+#endif
 
                 resultTextures[i] = new Texture2D((int)sprite.rect.size.x, (int)sprite.rect.size.y, sourceTexture.format, false);
                 int pixelCount = (int)(sprite.rect.size.x * sprite.rect.size.y);
