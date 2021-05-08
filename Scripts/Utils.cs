@@ -147,7 +147,7 @@ namespace Elanetic.Tools
         {
             if(m_ErrorTexture == null)
             {
-                m_ErrorTexture = new Texture2D(2, 2, TextureFormat.RGB24, false);
+                m_ErrorTexture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
                 m_ErrorTexture.filterMode = FilterMode.Point;
                 m_ErrorTexture.wrapMode = TextureWrapMode.Repeat;
                 m_ErrorTexture.SetPixels(new Color[] { Color.black, Color.magenta, Color.magenta, Color.black });
@@ -158,7 +158,7 @@ namespace Elanetic.Tools
 
         static public Texture2D GetErrorTexture(int width, int height)
         {
-            Texture2D texture = new Texture2D(width, height, TextureFormat.RGB24, false);
+            Texture2D texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
             texture.filterMode = FilterMode.Point;
             texture.wrapMode = TextureWrapMode.Repeat;
             Color32[] pixels = new Color32[width * height];
@@ -243,6 +243,7 @@ namespace Elanetic.Tools
 #endif
 
                 resultTextures[i] = new Texture2D((int)sprite.rect.size.x, (int)sprite.rect.size.y, sourceTexture.format, false);
+                
                 int pixelCount = (int)(sprite.rect.size.x * sprite.rect.size.y);
                 Color32[] pixels = new Color32[pixelCount];
                 for(int h = 0; h < pixelCount; h++)

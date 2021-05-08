@@ -142,6 +142,7 @@ namespace Elanetic.Tools
 				job.infos.Dispose();
 				job.results.Dispose();
 			}
+
 			//Having Update as a coroutine ensures that it is called after all other objects have Updated so we can schedule the job between now and LateUpdate
 			private IEnumerator EarlyLateUpdate()
             {
