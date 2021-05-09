@@ -71,6 +71,22 @@ namespace Elanetic.Tools
                 && position.y <= max.y;
         }
 
+        public bool Overlaps(BoundsInt2D other)
+        {
+            if(count == 0 || other.count == 0) return false;
+            return other.min.x <= max.x
+                && other.max.x >= min.x
+                && other.min.y <= max.y
+                && other.max.y >= min.y;
+        }
+
+        public int GetOverlapCount(BoundsInt2D other)
+        {
+            if(count == 0 || other.count == 0) return 0;
+            return Mathf.Max(0, Mathf.Min(max.x, other.max.x) - Mathf.Max(min.x, other.min.x) + 1) *
+                   Mathf.Max(0, Mathf.Min(max.y, other.max.y) - Mathf.Max(min.y, other.min.y) + 1);
+        }
+
         //Conversion to and from UnityEngine.BoundsInt
         public static implicit operator BoundsInt(BoundsInt2D boundsInt2D) => new BoundsInt(boundsInt2D.min.x, boundsInt2D.min.y, 0, boundsInt2D.size.x, boundsInt2D.size.y, 1);
         public static explicit operator BoundsInt2D(BoundsInt unityBounds) => new BoundsInt2D(unityBounds.xMin, unityBounds.yMin, unityBounds.size.x, unityBounds.size.y);
