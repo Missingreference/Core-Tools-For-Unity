@@ -89,9 +89,9 @@ namespace Elanetic.Tools
                 }
                 if(targetRotation == 1)
                 {
-                    receiveCoord = IndexToCoord90(i, pastingTextureSize.x, pastingTextureSize.y - clampedSides.x - clampedSides.y);
-                    receiveCoord.x -= clampedSides.z;
-                    receiveCoord.y += clampedSides.x;
+                    receiveCoord = IndexToCoord90(i, pastingTextureSize.y - clampedSides.x - clampedSides.y);
+                    receiveCoord.x += clampedSides.z;
+                    receiveCoord.y += clampedSides.y;
                 }
                 else if(targetRotation == 2)
                 {
@@ -101,9 +101,9 @@ namespace Elanetic.Tools
                 }
                 else if(targetRotation == 3)
                 {
-                    receiveCoord = IndexToCoord270(i, pastingTextureSize.y - clampedSides.x - clampedSides.y);
-                    receiveCoord.x += clampedSides.z;
-                    receiveCoord.y += clampedSides.y;
+                    receiveCoord = IndexToCoord270(i, pastingTextureSize.x, pastingTextureSize.y - clampedSides.x - clampedSides.y);
+                    receiveCoord.x -= clampedSides.z;
+                    receiveCoord.y += clampedSides.x;
                 }
 
 
@@ -122,7 +122,7 @@ namespace Elanetic.Tools
                 return (coord.y * width) + coord.x;
             }
 
-            private int2 IndexToCoord90(int index, int width, int height)
+            private int2 IndexToCoord270(int index, int width, int height)
             {
                 return new int2((width - 1) - (index / height), index % height);
             }
@@ -132,7 +132,7 @@ namespace Elanetic.Tools
                 return new int2((width - 1) - (index % width), (height - 1) - (index / width));
             }
 
-            private int2 IndexToCoord270(int index, int height)
+            private int2 IndexToCoord90(int index, int height)
             {
                 return new int2(index / height, (height - 1) - (index % height));
             }
