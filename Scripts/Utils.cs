@@ -9,7 +9,7 @@ using Random = UnityEngine.Random;
 
 namespace Elanetic.Tools
 {
-    public static class Utils
+    static public class Utils
     {
         static public int minSortingOrder => -32768; //This is just short.minValue
         static public int maxSortingOrder => 32767; //This is just short.maxValue
