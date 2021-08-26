@@ -11,9 +11,6 @@ namespace Elanetic.Tools
 {
     static public class Utils
     {
-        static public int minSortingOrder => -32768; //This is just short.minValue
-        static public int maxSortingOrder => 32767; //This is just short.maxValue
-
         static private Texture2D m_ErrorTexture;
         static private Sprite m_ErrorSprite;
 
@@ -106,7 +103,27 @@ namespace Elanetic.Tools
 
         static public float RoundToNearestMultiple(float numberToRound, float multipleOf)
         {
-            return Mathf.RoundToInt(numberToRound / multipleOf) * multipleOf;
+            return ((int)Math.Round(numberToRound / multipleOf)) * multipleOf;
+        }
+
+        //Get the smallest number being a mulitpleOf that can fit the numberToAlign.
+        //Example: n = 30, m = 4, result = 32  32 is the smallest number that is a multiple of 4 that can fit 30, 28 cannot fit 30 so the next multiple of 4 would be 32
+        static public int AlignToMultipleOf(int numberToAlign, int multipleOf)
+        {
+            //(n+(m-1))/m)*m
+            return ((numberToAlign + (multipleOf - 1)) / multipleOf) * multipleOf;
+        }
+
+        static public uint AlignToMultipleOf(uint numberToAlign, uint multipleOf)
+        {
+            //(n+(m-1))/m)*m
+            return ((numberToAlign + (multipleOf - 1u)) / multipleOf) * multipleOf;
+        }
+
+        static public long AlignToMultipleOf(long numberToAlign, long multipleOf)
+        {
+            //(n+(m-1))/m)*m
+            return ((numberToAlign + (multipleOf - 1L)) / multipleOf) * multipleOf;
         }
 
         static public Vector2 Normalized(Vector2 start, Vector2 end)
