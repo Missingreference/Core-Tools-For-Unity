@@ -42,6 +42,8 @@ namespace Elanetic.Tools
 
         public void Start()
         {
+            if(isRunning) return;
+
             if(currentTime >= endTime)
             {
                 currentTime = 0.0f;
@@ -67,6 +69,8 @@ namespace Elanetic.Tools
 
         public void Stop()
         {
+            if(!isRunning) return;
+
             isRunning = false;
 
             m_TimerCount--;
@@ -121,10 +125,10 @@ namespace Elanetic.Tools
                 for(int i = 0; i < m_TimerCount; i++)
                 {
                     DeltaTimer timer = m_Timers[i];
-                    m_Timers[i].Execute();
+                    timer.Execute();
                     if(!timer.isRunning)
                     {
-                        m_TimerCount--;
+                        i--;
                     }
                 }
             }
