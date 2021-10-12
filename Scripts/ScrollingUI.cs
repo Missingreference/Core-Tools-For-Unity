@@ -124,11 +124,6 @@ namespace Elanetic.Tools.UI
                 content.offsetMin = Vector2.zero;
                 content.offsetMax = Vector2.zero;
             }
-
-            if(GetComponent<Mask>() == null)
-            {
-                gameObject.AddComponent<Mask>();
-            }
         }
 
         void Update()
@@ -145,7 +140,7 @@ namespace Elanetic.Tools.UI
                     percent = 1.0f;
                 }
 
-                newPosition += new Vector2(0.0f, ((rectTransform.rect.height - content.rect.height) * percent) + (content.rect.height * 0.5f));
+                newPosition += new Vector2(0.0f, ((rectTransform.rect.height - content.rect.height) * percent) + (content.rect.height * content.pivot.y));
 
             }
             if(horizontal)
@@ -156,7 +151,7 @@ namespace Elanetic.Tools.UI
                 {
                     percent = 0.0f;
                 }
-                newPosition += new Vector2(((rectTransform.rect.width - content.rect.width) * percent) + (content.rect.width * 0.5f), 0.0f);
+                newPosition += new Vector2(((rectTransform.rect.width - content.rect.width) * percent) + (content.rect.width * content.pivot.x), 0.0f);
             }
 
             content.localPosition = newPosition;
