@@ -1,4 +1,5 @@
-﻿///This script will 'direct' a SpriteAnimator script on what animations to play.
+﻿#if UNITY_COLLECTIONS
+///This script will 'direct' a SpriteAnimator script on what animations to play.
 /// Features:
 /// -Have a dictionary of animations to choose from.
 /// -
@@ -266,3 +267,4 @@ namespace Elanetic.Tools
         #endregion
     }
 }
+#endif

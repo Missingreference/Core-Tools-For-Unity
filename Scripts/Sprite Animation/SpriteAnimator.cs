@@ -1,13 +1,16 @@
+#if UNITY_COLLECTIONS //Defined in Elanetic.Tools assembly definition file
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System;
+
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Profiling;
+
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Burst;
-using UnityEngine.Profiling;
 
 namespace Elanetic.Tools
 {
@@ -732,3 +735,4 @@ namespace Elanetic.Tools
 		#endregion Private Methods
 	}
 }
+#endif

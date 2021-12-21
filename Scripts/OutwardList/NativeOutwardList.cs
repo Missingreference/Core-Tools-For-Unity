@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_COLLECTIONS //Defined in Elanetic.Tools assembly definition file
+using System;
 using Unity.Collections;
 using Unity.Mathematics;
 
@@ -122,3 +123,4 @@ namespace Elanetic.Tools
         }
     }
 }
+#endif

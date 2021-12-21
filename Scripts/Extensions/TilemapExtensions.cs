@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_TILEMAP //Defined in Elanetic.Tools assembly definition file
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -9,6 +10,7 @@ using UnityEngine.Tilemaps;
 
 namespace Elanetic.Tools
 {
+
 	#region Tilemap
 
 	static public class TilemapExtensions
@@ -79,4 +81,6 @@ namespace Elanetic.Tools
 	}
 
 	#endregion ITilemap
+
 }
+#endif
