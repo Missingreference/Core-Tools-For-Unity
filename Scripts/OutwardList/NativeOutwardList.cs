@@ -10,7 +10,7 @@ namespace Elanetic.Tools
     /// Similar to OutwardList but is a struct and uses Unity's Collections for internal storage. Used for Unity DOTS.
     /// More info on implementation in OutwardList.
     /// </summary>
-    public struct NativeOutwardList<T> : IDisposable where T : struct
+    public struct NativeOutwardList<T> : IDisposable where T : unmanaged
     {
         private NativeList<T> m_List;
         private Allocator m_Allocator;
