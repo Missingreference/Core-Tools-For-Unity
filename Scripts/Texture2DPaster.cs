@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.Profiling;
 
 using Unity.Collections;
 using Unity.Jobs;
@@ -16,15 +17,12 @@ namespace Elanetic.Tools
 {
     public class Texture2DPaster
     {
-        public bool isExecuting { get; private set; } = false;
         public Texture2D resultTexture { get; private set; }
 
         private BoundsInt2D m_BaseRect;
-        private List<BoundsInt2D> m_Rects = new List<BoundsInt2D>();
-        private List<IJobFor> m_Jobs = new List<IJobFor>(5);
-        private List<int> m_JobRotations = new List<int>();
-        private JobHandle[] m_JobHandles;
-        private bool m_Completed = false;
+        private int m_JobCount = 0;
+        private JobHandle[] m_JobHandles = new JobHandle[8];
+        private BoundsInt2D[] m_Rects = new BoundsInt2D[8];
 
         [BurstCompile]
         private struct TexturePasterJob : IJobFor
@@ -238,6 +236,44 @@ namespace Elanetic.Tools
             }
         }
 
+        [BurstCompile]
+        private struct TexturePasterJobColor : IJobFor
+        {
+            [NativeDisableContainerSafetyRestriction]
+            [NativeDisableParallelForRestriction]
+            [WriteOnly]
+            public NativeArray<int> targetTexture;
+            [ReadOnly]
+            public int targetTextureWidth;
+            [ReadOnly]
+            public int2 targetPosition;
+            [ReadOnly]
+            public int targetWidth;
+            [ReadOnly]
+            public int color;
+
+            [SkipLocalsInit]
+            public void Execute(int i)
+            {
+                int2 targetCoord = IndexToCoord(i, targetWidth) + targetPosition;
+                int targetIndex = CoordToIndex(targetCoord, targetTextureWidth);
+
+                //RGBA bytes
+                targetTexture[targetIndex] = color;
+            }
+
+            [return: AssumeRange(0, 16384)]
+            static int CoordToIndex(int2 coord, int width)
+            {
+                return (coord.y * width) + coord.x;
+            }
+
+            private int2 IndexToCoord(int index, int width)
+            {
+                return new int2(index % width, index / width);
+            }
+        }
+
         public Texture2DPaster(Texture2D baseTexture)
         {
 #if SAFE_EXECUTION
@@ -261,16 +297,119 @@ namespace Elanetic.Tools
             m_BaseRect = new BoundsInt2D(0, 0, resultTexture.width, resultTexture.height);
         }
 
-        //Rotation: 0 = 0 degrees, 1 = 90 degrees, 2 = 180 degrees 3 = 270 degrees, etc
-        public void AddTexture(Texture2D texture, Vector2Int texturePosition, int rotation=0)
+        public void AddColor(Color color, Vector2Int position, Vector2Int size, bool checkForOverlap = true)
         {
+            if(m_JobCount == m_JobHandles.Length)
+            {
+                for(int i = 0; i < m_JobCount; i++)
+                {
+                    if(m_JobHandles[i].IsCompleted)
+                    {
+                        m_JobCount--;
+                        continue;
+                    }
+                    else
+                    {
+                        int dif = m_JobHandles.Length - m_JobCount;
+                        for(int h = 0; h < m_JobCount; h++)
+                        {
+                            int oldIndex = dif + h;
+                            m_JobHandles[h] = m_JobHandles[oldIndex];
+                            m_Rects[h] = m_Rects[oldIndex];
+                        }
+                        break;
+                    }
+                }
+                if(m_JobCount == m_JobHandles.Length)
+                {
+                    Array.Resize<JobHandle>(ref m_JobHandles, m_JobHandles.Length * 2);
+                    Array.Resize<BoundsInt2D>(ref m_Rects, m_JobHandles.Length);
+                }
+            }
+
+            BoundsInt2D rect = new BoundsInt2D(position.x, position.y, size.x, size.y);
+
+#if SAFE_EXECUTION
+            if(!rect.Overlaps(m_BaseRect))
+                throw new ArgumentException("Inputted texture position does not overlap with the base texture.");
+#endif
+
+            int targetWidth = Mathf.Max(0, Mathf.Min(rect.max.x, m_BaseRect.max.x) - Mathf.Max(rect.min.x, m_BaseRect.min.x) + 1);
+
+            JobHandle jobHandle = new JobHandle();
+            if(checkForOverlap)
+            {
+                for(int h = m_JobHandles.Length - 1; h >= 0; h--)
+                {
+                    if(rect.Overlaps(m_Rects[h]))
+                    {
+                        jobHandle = m_JobHandles[h];
+                        break;
+                    }
+                }
+            }
+            Color32 color32 = (Color32)color;
+            TexturePasterJobColor job = new TexturePasterJobColor()
+            {
+                targetTexture = resultTexture.GetRawTextureData<int>(),
+                targetTextureWidth = resultTexture.width,
+                targetPosition = new int2(Mathf.Max(0, position.x), Mathf.Max(0, position.y)),
+                targetWidth = targetWidth,
+                color = (int)((color32.r << 0) | (color32.g << 8) | (color32.b << 16) | (color32.a << 24))
+            };
+            m_JobHandles[m_JobCount] = job.ScheduleParallel(m_BaseRect.GetOverlapCount(rect), 64, jobHandle);
+
+            m_Rects[m_JobCount] = rect;
+            m_JobCount++;
+        }
+
+        public void AddColor(Color color, bool checkForOverlap=true) => AddColor(color, Vector2Int.zero, new Vector2Int(resultTexture.width,resultTexture.height), checkForOverlap);
+
+        //Rotation: 0 = 0 degrees, 1 = 90 degrees, 2 = 180 degrees 3 = 270 degrees, etc
+        //checkForOverlap: If you are sure that any textures added to this texture paster don't overlap eachother, save on performance by setting to false.
+        //If incorrectly set to false errors/race conditions will occur!
+        public void AddTexture(Texture2D texture, Vector2Int texturePosition, int rotation=0, bool checkForOverlap=true)
+        {
+            Profiler.BeginSample("AddTexture");
+            Profiler.BeginSample("Setup");
 #if SAFE_EXECUTION
             if(texture == null)
                 throw new ArgumentNullException("Inputted texture is null.");
             if(texture.format != TextureFormat.RGBA32)
                 Debug.LogWarning("Inputted texture format is '" + texture.format.ToString() + "'. Any format other than RGBA32 will most likely result in exceptions or corrupt data.");
 #endif
-            BoundsInt2D rect = new BoundsInt2D(texturePosition.x, texturePosition.y, texture.width, texture.height);;
+            Profiler.BeginSample("Resize Arrays");
+            if(m_JobCount == m_JobHandles.Length)
+            {
+                for(int i = 0; i < m_JobCount; i++)
+                {
+                    if(m_JobHandles[i].IsCompleted)
+                    {
+                        m_JobCount--;
+                        continue;
+                    }
+                    else
+                    {
+                        int dif = m_JobHandles.Length - m_JobCount;
+                        for(int h = 0; h < m_JobCount; h++)
+                        {
+                            int oldIndex = dif + h;
+                            m_JobHandles[h] = m_JobHandles[oldIndex];
+                            m_Rects[h] = m_Rects[oldIndex];
+                        }
+                        break;
+                    }
+                }
+                if(m_JobCount == m_JobHandles.Length)
+                {
+                    Array.Resize<JobHandle>(ref m_JobHandles, m_JobHandles.Length * 2);
+                    Array.Resize<BoundsInt2D>(ref m_Rects, m_JobHandles.Length);
+                }
+            }
+            Profiler.EndSample();
+            Profiler.BeginSample("Rect and Rotation Setup");
+
+            BoundsInt2D rect = new BoundsInt2D(texturePosition.x, texturePosition.y, texture.width, texture.height);
 
             rotation %= 4;
 
@@ -279,7 +418,7 @@ namespace Elanetic.Tools
 
             if(rotation % 2 != 0)
             {
-                rect = new BoundsInt2D(texturePosition.x, texturePosition.y, texture.width, texture.height);
+                rect = new BoundsInt2D(texturePosition.x, texturePosition.y, texture.height, texture.width);
             }
 
 #if SAFE_EXECUTION
@@ -305,7 +444,24 @@ namespace Elanetic.Tools
             {
                 clampedSides.z = m_BaseRect.min.y - rect.min.y;
             }
+            Profiler.EndSample();
+            Profiler.BeginSample("Check For Overlap");
+            JobHandle jobHandle = new JobHandle();
+            if(checkForOverlap)
+            {
+                for(int h = m_JobHandles.Length - 1; h >= 0; h--)
+                {
+                    if(rect.Overlaps(m_Rects[h]))
+                    {
+                        jobHandle = m_JobHandles[h];
+                        break;
+                    }
+                }
+            }
+            Profiler.EndSample();
 
+            Profiler.EndSample();
+            Profiler.BeginSample("Create Job and Schedule");
             switch(rotation)
             {
                 case 0:
@@ -320,7 +476,7 @@ namespace Elanetic.Tools
                         clampedSides = clampedSides,
                         receiveWidth = texture.width - clampedSides.x - clampedSides.y
                     };
-                    m_Jobs.Add(job0);
+                    m_JobHandles[m_JobCount] = job0.ScheduleParallel(m_BaseRect.GetOverlapCount(rect), 32, jobHandle);
                     break;
                 case 1:
                     TexturePasterJobRotation1 job1 = new TexturePasterJobRotation1()
@@ -333,7 +489,7 @@ namespace Elanetic.Tools
                         targetWidth = targetWidth,
                         clampedSides = clampedSides,
                     };
-                    m_Jobs.Add(job1);
+                    m_JobHandles[m_JobCount] = job1.ScheduleParallel(m_BaseRect.GetOverlapCount(rect), 32, jobHandle);
                     break;
                 case 2:
                     TexturePasterJobRotation2 job2 = new TexturePasterJobRotation2()
@@ -346,7 +502,7 @@ namespace Elanetic.Tools
                         targetWidth = targetWidth,
                         clampedSides = clampedSides,
                     };
-                    m_Jobs.Add(job2);
+                    m_JobHandles[m_JobCount] = job2.ScheduleParallel(m_BaseRect.GetOverlapCount(rect), 32, jobHandle);
                     break;
                 case 3:
                     TexturePasterJobRotation3 job3 = new TexturePasterJobRotation3()
@@ -359,77 +515,31 @@ namespace Elanetic.Tools
                         targetWidth = targetWidth,
                         clampedSides = clampedSides,
                     };
-                    m_Jobs.Add(job3);
+                    m_JobHandles[m_JobCount] = job3.ScheduleParallel(m_BaseRect.GetOverlapCount(rect), 32, jobHandle);
                     break;
             }
-
-
-            m_Rects.Add(rect);
-            m_JobRotations.Add(rotation);
+            m_Rects[m_JobCount] = rect;
+            m_JobCount++;
+            Profiler.EndSample();
+            Profiler.EndSample();
         }
 
-        public void AddTexture(Texture2D texture, int rotation=0) => AddTexture(texture, Vector2Int.zero, rotation);
+        public void AddTexture(Texture2D texture, Vector2Int texturePosition, bool checkForOverlap=true) => AddTexture(texture, texturePosition, 0, checkForOverlap);
 
-        //Since this relies on the Job System. Make sure to call this as early as possible such as Update for maximum performance gain. Completion is scheduled for LateUpdate.
-        public void Execute()
-        {
-#if SAFE_EXECUTION
-            if(m_Jobs.Count == 0)
-                throw new InvalidOperationException("Tried to execute Texture2D Paster but there is no pasting textures. Make sure to add textures using AddTexture().");
-#endif
-            m_JobHandles = new JobHandle[m_Jobs.Count];
-
-            for(int i = 0; i < m_Jobs.Count; i++)
-            {
-                JobHandle jobHandle = new JobHandle();
-                for(int h = i - 1; h >= 0; h--)
-                {
-                    if(m_Rects[i].Overlaps(m_Rects[h]))
-                    {
-                        jobHandle = m_JobHandles[h];
-                        break;
-                    }
-                }
-
-                int rotation = m_JobRotations[i];
-                switch(rotation)
-                {
-                    case 0:
-                        m_JobHandles[i] = ((TexturePasterJob)m_Jobs[i]).ScheduleParallel(m_BaseRect.GetOverlapCount(m_Rects[i]), 32, jobHandle);
-                        break;
-                    case 1:
-                        m_JobHandles[i] = ((TexturePasterJobRotation1)m_Jobs[i]).ScheduleParallel(m_BaseRect.GetOverlapCount(m_Rects[i]), 32, jobHandle);
-                        break;
-                    case 2:
-                        m_JobHandles[i] = ((TexturePasterJobRotation2)m_Jobs[i]).ScheduleParallel(m_BaseRect.GetOverlapCount(m_Rects[i]), 32, jobHandle);
-                        break;
-                    case 3:
-                        m_JobHandles[i] = ((TexturePasterJobRotation3)m_Jobs[i]).ScheduleParallel(m_BaseRect.GetOverlapCount(m_Rects[i]), 32, jobHandle);
-                        break;
-                }
-            }
-
-            isExecuting = true;
-        }
+        public void AddTexture(Texture2D texture, int rotation=0, bool checkForOverlap=true) => AddTexture(texture, Vector2Int.zero, rotation, checkForOverlap);
 
         public void ForceComplete()
         {
 #if SAFE_EXECUTION
-            if(m_Jobs.Count == 0)
-                throw new InvalidOperationException("Tried to force Texture2D Paster but there is no pasting textures. Make sure to add textures using AddTexture() and then Execute().");
-            if(m_JobHandles == null)
-                throw new InvalidOperationException("Tried to force Texture2D Paster but it has not been executed. Make sure to call Execute() before trying to finish the operation.");
+            if(m_JobCount == 0)
+                throw new InvalidOperationException("Tried to force Texture2D Paster but there is no pasting textures. Make sure to add textures using AddTexture() and then ForceComplete.");
 #endif
-
-            if(m_Completed) return;
-            m_Completed = true;
-            
-            for(int h = 0; h < m_JobHandles.Length; h++)
+            for(int h = 0; h < m_JobCount; h++)
             {
                 m_JobHandles[h].Complete();
             }
 
-            isExecuting = false;
+            m_JobCount = 0;
         }
     }
 }

@@ -1,17 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
-using System;
+using Unity.Collections;
 
 namespace Elanetic.Tools
 {
     static public class Texture2DExtensions
     {
-        //Do not use these extension functions if you plan to pass VERY large textures in as the color pool will stay in memory.
-        static private Color32[] m_ColorPool = new Color32[1000];
-        static private Color32 m_LastColor = Color.clear;
-        static private int m_LastAmount = 1000;
-
         static public void SetPixels(this Texture2D targetTexture, int x, int y, int blockWidth, int blockHeight, Color color)
         {
             SetPixels32(targetTexture, x, y, blockWidth, blockHeight, color, 0);
@@ -29,46 +26,35 @@ namespace Elanetic.Tools
 
         static public void SetPixels32(this Texture2D targetTexture, int x, int y, int blockWidth, int blockHeight, Color32 color, int miplevel)
         {
-            int totalPixelCount = blockWidth * blockHeight;
-            //Check if the color pool needs to be resized
-            if(totalPixelCount > m_ColorPool.Length)
-            {
-                //Resize color pool
-                //250 is an arbitrary size to try to minimize color pool resizes(garbage allocation) and not waste unused memory. Change to personal preference.
-                m_ColorPool = new Color32[Mathf.Min(totalPixelCount + 250, SystemInfo.maxTextureSize * SystemInfo.maxTextureSize)];
-                m_LastColor = Color.clear;
-                m_LastAmount = m_ColorPool.Length;
-            }
-            else if(totalPixelCount <= 0)
-            {
-                //Let Unity's SetPixels deal with that error
-                targetTexture.SetPixels32(x, y, blockWidth, blockHeight, m_ColorPool, miplevel);
-                return;
-            }
+#if SAFE_EXECUTION
+            if(blockWidth * blockHeight <= 0)
+                throw new ArgumentException("Inputted block size must be more than zero.");
+            if(x < 0 || y < 0 || x >= targetTexture.width || y >= targetTexture.height)
+                throw new ArgumentException("Inputted position is not within the texture's coordinates");
+            if(x + blockWidth > targetTexture.width || y + blockHeight > targetTexture.height)
+                throw new ArgumentException("Inputted block size goes outside the bounds of the texture.");
+            if(targetTexture.format != TextureFormat.RGBA32)
+                Debug.LogWarning("This SetPixels overload requires an 8 bits per channel RGBA format. Any other format other than RGBA32 may cause errors or unexpected behaviour.");
+#endif
+            //REVIEW: These next few lines are optional to ensure to sanitize input but also more performant without them.
+            /*
+            if(x > targetTexture.width || y > targetTexture.height) return;
 
-            //Check if the last color is equivalent
-            if(color.r == m_LastColor.r && color.g == m_LastColor.g && color.b == m_LastColor.b && color.a == m_LastColor.a)
-            {
-                //Reuse color array and fill if needed
-                for(int i = m_LastAmount; i < totalPixelCount; i++)
-                {
-                    m_ColorPool[i] = color;
-                }
-                m_LastAmount = Mathf.Max(m_LastAmount, totalPixelCount);
-            }
-            else
-            {
-                //New color, no performance gain
-                for(int i = 0; i < totalPixelCount; i++)
-                {
-                    m_ColorPool[i] = color;
-                }
-                m_LastColor = color;
-                m_LastAmount = totalPixelCount;
-            }
+            x = Mathf.Max(0, x);
+            y = Mathf.Max(0, y);
+            blockWidth = Mathf.Min(blockWidth, targetTexture.width - x);
+            blockHeight = Mathf.Min(blockHeight, targetTexture.height - y);
+            */
+            //By converting color32 to an int it means that there are less interations of the for loop in theory
+            int colorInt = (int)((color.r << 0) | (color.g << 8) | (color.b << 16) | (color.a << 24));
 
-            //Do SetPixels
-            targetTexture.SetPixels32(x, y, blockWidth, blockHeight, m_ColorPool, miplevel);
+            NativeArray<int> pixelData = targetTexture.GetPixelData<int>(miplevel);
+            int count = blockWidth * blockHeight;
+
+            for(int i = 0; i < count; i++)
+            {
+                pixelData[Utils.CoordToIndex(new Vector2Int(x,y) + Utils.IndexToCoord(i, blockWidth), targetTexture.width)] = colorInt;
+            }
         }
 
         static public void SetPixels(this Texture2D targetTexture, Color color)
