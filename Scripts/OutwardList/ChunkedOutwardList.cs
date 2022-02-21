@@ -62,7 +62,15 @@ namespace Elanetic.Tools
             return default;
         }
 
-        private int CoordToChunkCoord(int coordAxisValue) => (coordAxisValue < 0 ? coordAxisValue - m_ChunkSize + 1 : coordAxisValue) / m_ChunkSize;
+        private int CoordToChunkCoord(int coordAxisValue)
+        {
+            if(coordAxisValue < 0)
+            {
+                return (coordAxisValue - m_ChunkSize + 1) / m_ChunkSize;
+            }
+            return coordAxisValue / m_ChunkSize;
+        }
+        //=> (coordAxisValue < 0 ? coordAxisValue - m_ChunkSize + 1 : coordAxisValue) / m_ChunkSize;
 
         /*
         private Vector2Int CoordToChunkCoord(Vector2Int coord)

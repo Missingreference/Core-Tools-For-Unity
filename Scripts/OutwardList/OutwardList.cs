@@ -8,15 +8,20 @@ namespace Elanetic.Tools
     /// <summary>
     /// This class creates a list to store values on a 2D grid. Lookups are faster than a Dictionary, especially in combination with ChunkedOutwardList.
     /// Downside is setting coordinates far from (0,0) allocates a lot of memory depending on the type.
+    /// It is recommended that if you plan to make your home coordinate far from origin that you add an offset to this as input to be as close as possible to origin to reduce allocations.
     /// </summary>
+    [Obsolete("Use GridArray instead. Better performance. Better name.",false)]
     public static class OutwardList
     {
         static public int CoordToIndex(int x, int y)
         {
-            if(x == 0 && y == 0) return 0;
+            //The uncommented version you see here is the minimal barebones version to optimize as much as possible.
+            //A side effect of this is that it is not readable and to be quite frank it has been so long since I've implemented it that even I don't remember whats going on so debugging it is a nightmare.
+            //This function in particular could be optimized further somehow to remove all branches completely but I'm not sure how yet.
+            //For now it is best to call once, save and reuse the value as many times as possible.
 
-            m_AbsX = Math.Abs(x);
-            m_AbsY = Math.Abs(y);
+            int m_AbsX = FastMath.Abs(x);
+            int m_AbsY = FastMath.Abs(y);
             /*
             int bracketIndex = Mathf.Max(Mathf.Abs(coord.x), Mathf.Abs(coord.y));
             //Bracket index is X, Level is Y
@@ -85,6 +90,10 @@ namespace Elanetic.Tools
                     {
                         return (((int)((m_AbsY / 2.0f) * (1.0f + m_AbsY))) * 8) - (m_AbsY * 8) + 3;//bracketMin + 2;
                     }
+                    else if(y == 0)
+                    {
+                        return 0;
+                    }
                     return (((int)((m_AbsY / 2.0f) * (1.0f + m_AbsY))) * 8) - (m_AbsY * 8) + 4;
                 }
                 else if(m_AbsX == m_AbsY)
@@ -117,12 +126,9 @@ namespace Elanetic.Tools
                 }
             }
         }
-
-        //Does doing this make it not thread-safe? Regardless OutwardList internally uses List.
-        static private int m_AbsX = 0;
-        static private int m_AbsY = 0;
     }
 
+    [Obsolete("Use GridArray instead. Better performance. Better name.", false)]
     public class OutwardList<T>
     {
         private readonly List<T> m_List = new List<T>();
