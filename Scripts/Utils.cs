@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -19,6 +20,7 @@ namespace Elanetic.Tools
         /// <summary>
         /// Retrieve a random color. Alpha is always 100%.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public Color GetRandomColor()
         {
             return new Color(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), 1.0f);
@@ -27,6 +29,7 @@ namespace Elanetic.Tools
         /// <summary>
         /// Converts a Color or Color32 to hexadecimal in the format of RRGGBBAA. No # symbol is included at the beginning.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public string ColorToHex(Color32 color)
         {
             return color.r.ToString("X2") + color.g.ToString("X2") + color.b.ToString("X2") + color.a.ToString("X2");
@@ -35,6 +38,7 @@ namespace Elanetic.Tools
         /// <summary>
         /// Convert a hex string (in the format of RRGGBB, RRGGBBAA, #RRGGBB or #RRGGBBAA) to UnityEngine.Color. If no alpha channel inputted, it is set to 100%.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public Color HexToColor(string hex)
         {
             if(hex[0] == '#')
@@ -79,11 +83,13 @@ namespace Elanetic.Tools
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public int CoordToIndex(Vector2Int coord, BoundsInt2D bounds)
         {
             return ((coord.y - bounds.min.y) * bounds.size.x) + (coord.x - bounds.min.x);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public int CoordToIndex(Vector2Int coord, int width)
         {
             return (coord.y * width) + coord.x;
@@ -98,11 +104,12 @@ namespace Elanetic.Tools
             return new Vector2Int((index % bounds.size.x) + bounds.min.x, (index / bounds.size.x) + bounds.min.y);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public Vector2Int IndexToCoord(int index, int width)
         {
             return new Vector2Int(index % width, index / width);
         }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public float RoundToNearestMultiple(float numberToRound, float multipleOf)
         {
             return ((int)Math.Round(numberToRound / multipleOf)) * multipleOf;
@@ -110,18 +117,21 @@ namespace Elanetic.Tools
 
         //Get the smallest number being a mulitpleOf that can fit the numberToAlign.
         //Example: n = 30, m = 4, result = 32  32 is the smallest number that is a multiple of 4 that can fit 30, 28 cannot fit 30 so the next multiple of 4 would be 32
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public int AlignToMultipleOf(int numberToAlign, int multipleOf)
         {
             //(n+(m-1))/m)*m
             return ((numberToAlign + (multipleOf - 1)) / multipleOf) * multipleOf;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public uint AlignToMultipleOf(uint numberToAlign, uint multipleOf)
         {
             //(n+(m-1))/m)*m
             return ((numberToAlign + (multipleOf - 1u)) / multipleOf) * multipleOf;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public long AlignToMultipleOf(long numberToAlign, long multipleOf)
         {
             //(n+(m-1))/m)*m
@@ -129,6 +139,7 @@ namespace Elanetic.Tools
         }
 
         //Get the normalized direction from a start point towards an end point
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public Vector2 NormalizedDirection(Vector2 start, Vector2 end)
         {
             Vector2 heading = end - start;
@@ -142,6 +153,7 @@ namespace Elanetic.Tools
         /// </summary>
         /// <param name="mask"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool MaskHasOnlyOneFlag(int mask) //Faster than GetFlagCount?
         {
             return ((mask - 1) & mask) == 0 && mask > 0;
@@ -152,6 +164,7 @@ namespace Elanetic.Tools
         /// </summary>
         /// <param name="mask"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public int GetFlagCount(int mask)
         {
             int count = 0;
@@ -702,11 +715,13 @@ namespace Elanetic.Tools
             DrawBounds(new Bounds(point, new Vector3(size * 0.5f, size * 0.5f, size * 0.5f)), size, color, duration, depthTest);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public Vector2 DegreesToVector2(float degrees)
         {
             return new Vector2(Mathf.Cos(degrees * Mathf.Deg2Rad), Mathf.Sin(degrees * Mathf.Deg2Rad));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public float Vector2ToDegrees(Vector2 direction)
         {
             if (direction.y < 0.0f)
@@ -714,11 +729,13 @@ namespace Elanetic.Tools
             return Mathf.Acos(direction.x) * Mathf.Rad2Deg;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public Vector2 RotateVector2(Vector2 direction, float degrees)
         {
             return DegreesToVector2(Vector2ToDegrees(direction) + degrees);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public Vector2 RotateAround(Vector2 point, Vector2 center, float degrees)
         {
             float radians = Mathf.Deg2Rad * degrees;
