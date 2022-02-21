@@ -1,0 +1,119 @@
+///Some of these functions are sourced from:
+///http://graphics.stanford.edu/~seander/bithacks.html
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+
+namespace Elanetic.Tools
+{
+    /// <summary>
+    /// The purpose of this math library is to use variations of math functions to prioritize performance above everything else with minimal branching as possible.
+    /// This may come at a cost of a range of valid input which will be specified by function summaries and have SAFE_EXECUTION preprocessor to be a safety check for valid input.
+    /// </summary>
+    static public class FastMath
+    {
+        /// <summary>
+        /// Get the absolute value of the inputted value.
+        /// </summary>
+        /// Notes:
+        /// UnityEngine.Mathf.Abs(int) calls System.Math.Abs(int).
+        /// System.Math has branching and safety checks in build.
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public int Abs(int value)
+        {
+#if SAFE_EXECUTION
+            if(value == int.MinValue)
+                throw new OverflowException("The minimum integer -2147483648 is not capable of beings positive due to the maximum integer being 2147483647. A byproduct of two's complement.");
+#endif
+            //63 comes from: (sizeof(int) * CHAR_BIT) - 1;
+            //CHAR_BIT is from C/C++ which represents the number of bits in a byte (8) in C#
+            int mask = value >> 63;
+            return (value + mask) ^ mask;
+        }
+
+        /// <summary>
+        /// Get the smaller of the two numbers.
+        /// </summary>
+        /// Notes:
+        /// Just as fast as System.Min and UnityEngine.Mathf.Min.
+        /// Unable to use the above link's bit twiddling for branchless min and max due to C#'s booleans are not easily convertable to 0 or 1 integers.
+        /// Using unsafe pointers to convert from bool to int does not convert to just 1 but rather to any number not zero including negative numbers.
+        /// This method is the best I've found for maximum compatibility. Use FastMin if you are able to follow the rule specified in it's summary.
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public int Min(int value0, int value1)
+        {
+            if(value0 > value1)
+                return value1;
+            return value0;
+        }
+
+        /// <summary>
+        /// Get the smaller of the two numbers.
+        /// Use this if you are sure that the result of A subtracted by B is within int.MinValue and int.MaxValue.
+        /// It is faster than normal Min but will return incorrect data if the above rule is not followed.
+        /// A good rule of thumb is if you think you are potentially using big numbers, use the regular FastMath.Min function.
+        /// </summary>
+        /// Notes: Benchmarks have shown that MinFast is only slightly faster than Min.
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public int MinFast(int a, int b)
+        {
+#if SAFE_EXECUTION
+            int dif;
+            try
+            {
+                dif = checked(a - b);
+            }
+            catch(OverflowException ex)
+            {
+                throw new OverflowException("FastMath.MinFast has been used incorrectly. A - B must not overflow past int.MinValue or int.MaxValue otherwise it will result in a bad return. Use FastMath.Min instead for cases like these.", ex);
+            }
+#else
+            int dif = a - b;
+#endif
+            return b + (dif & (dif >> 63));
+        }
+
+        /// <summary>
+        /// Get the larger of the two numbers.
+        /// </summary>
+        /// Notes:
+        /// Just as fast as System.Max and UnityEngine.Mathf.Max.
+        /// Unable to use the above link's bit twiddling for branchless min and max due to C#'s booleans are not easily convertable to 0 or 1 integers.
+        /// Using unsafe pointers to convert from bool to int does not convert to just 1 but rather to any number not zero including negative numbers.
+        /// This method is the best I've found for maximum compatibility. Use FastMax if you are able to follow the rule specified in it's summary.
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public int Max(int value0, int value1)
+        {
+            if(value1 < value0)
+                return value0;
+            return value1;
+        }
+
+        /// <summary>
+        /// Get the larger of the two numbers.
+        /// Use this if you are sure that the result of A subtracted by B is within int.MinValue and int.MaxValue.
+        /// It is faster than normal Min but will return incorrect data if the above rule is not followed.
+        /// A good rule of thumb is if you think you are potentially using big numbers, use the regular FastMath.Max function.
+        /// </summary>
+        /// Notes: Benchmarks have shown that MaxFast is only slightly faster than Max.
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public int MaxFast(int a, int b)
+        {
+#if SAFE_EXECUTION
+            int dif;
+            try
+            {
+                dif = checked(a - b);
+            }
+            catch(OverflowException ex)
+            {
+                throw new OverflowException("FastMath.MaxFast has been used incorrectly. A - B must not overflow past int.MinValue or int.MaxValue otherwise it will result in a bad return. Use FastMath.Max instead for cases like these.", ex);
+            }
+#else
+            int dif = a - b;
+#endif
+            return b - (dif & (dif >> 63));
+        }
+    }
+}
