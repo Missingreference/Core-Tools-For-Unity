@@ -95,6 +95,13 @@ namespace Elanetic.Tools
             return (coord.y * width) + coord.x;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public int CoordToIndex(int x, int y, int width)
+        {
+            return (y * width) + x;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public Vector2Int IndexToCoord(int index, BoundsInt2D bounds)
         {
 #if SAFE_EXECUTION
