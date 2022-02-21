@@ -45,7 +45,7 @@ namespace Elanetic.Tools
             blockWidth = Mathf.Min(blockWidth, targetTexture.width - x);
             blockHeight = Mathf.Min(blockHeight, targetTexture.height - y);
             */
-            //By converting color32 to an int it means that there are less interations of the for loop in theory
+            //By converting color32 to an int it means that there are less interations of the for loop. REVIEW: Is this faster?
             int colorInt = (int)((color.r << 0) | (color.g << 8) | (color.b << 16) | (color.a << 24));
 
             NativeArray<int> pixelData = targetTexture.GetPixelData<int>(miplevel);
