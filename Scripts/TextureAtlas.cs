@@ -79,6 +79,9 @@ namespace Elanetic.Tilemaps
             fullTexture.Apply(false, true);*/
             m_DirectTexture = DirectGraphics.CreateTexture(m_MaxTextureCount.x * textureSize.x, m_MaxTextureCount.y * textureSize.y, textureFormat);
             fullTexture = m_DirectTexture.texture;
+            fullTexture.wrapMode = TextureWrapMode.Clamp;
+            fullTexture.anisoLevel = 0;
+            fullTexture.filterMode = FilterMode.Point;
             DirectGraphics.ClearTexture(fullTexture);
         }
 
