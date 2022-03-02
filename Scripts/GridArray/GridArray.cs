@@ -157,6 +157,10 @@ namespace Elanetic.Tools
                 Array.Copy(m_Array, 0, newArray, 0, m_Array.Length);
                 m_Array = newArray;
             }
+#if SAFE_EXECUTION
+            else if(index < 0)
+                throw new IndexOutOfRangeException("Received a negative index: " + index.ToString() + ". Either GridArray.CellToIndex returned an index that overflows past Int.MaxValue or bad input.");
+#endif
             m_Array[index] = item;
         }
 
@@ -169,6 +173,10 @@ namespace Elanetic.Tools
             int index = GridArray.CellToIndex(x, y);
             if(index >= m_Array.Length)
                 return default;
+#if SAFE_EXECUTION
+            else if(index < 0)
+                throw new IndexOutOfRangeException("Received a negative index from GridArray.CellToIndex meaning that the index overflows past Int.MaxValue. Cell Coordinate: " + x.ToString() + ", " + y.ToString());
+#endif
             return m_Array[index];
         }
 
