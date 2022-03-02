@@ -129,24 +129,25 @@ namespace Elanetic.Tools
                     size += m_DistanceResizeAmount;
 
 #if SAFE_EXECUTION
-                long memorySize;
+                long memorySizeInBytes;
+                long longSize = (long)size;
                 if(typeof(T).IsValueType)
                 {
-                    memorySize = ((long)Marshal.SizeOf(typeof(T))) * (long)(size * size);
+                    memorySizeInBytes = ((long)Marshal.SizeOf(typeof(T))) * longSize * longSize;
                 }
                 else if(IntPtr.Size == 8) //64 bit system
                 {
-                    memorySize = 8L * (long)(size * size);
+                    memorySizeInBytes = 8L * longSize * longSize;
                 }
                 else //32 bit system
                 {
-                    memorySize = 4L * (long)(size * size);
+                    memorySizeInBytes = 4L * longSize * longSize;
                 }
 
-                if(memorySize / 1024L / 1024L >= 1L)
+                if(memorySizeInBytes / 1024L / 1024L / 1024L > 1L)
                 {
 #if UNITY_EDITOR || UNITY_STANDALONE
-                    UnityEngine.Debug.LogWarning("Allocating more than 1 GB of memory for a resize (" + memorySize.ToString() + " GB).");
+                    UnityEngine.Debug.LogWarning("Allocating more than 1 GB of memory for a resize (" + (memorySizeInBytes / 1024L / 1024L / 1024L).ToString() + " GB).");
 #endif
                 }
 
