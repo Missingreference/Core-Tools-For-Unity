@@ -33,29 +33,44 @@ namespace Elanetic.Tools
 
         public void SetItem(int x, int y, T item)
         {
-            //int index = GridArray.CellToIndex((x / chunkSize) - (((x & int.MinValue) >> 31) & 1), (y / chunkSize) - (((y & int.MinValue) >> 31) & 1));
-            int index = GetChunkIndex(x,y);
-            T[] array = m_Chunks.GetItem(index);
+            int negativityBoost = (((x & int.MinValue) >> 31) & 1);
+            int chunkX = ((x + negativityBoost) / chunkSize) - negativityBoost;
+            negativityBoost = (((y & int.MinValue) >> 31) & 1);
+            int chunkY = ((y + negativityBoost) / chunkSize) - negativityBoost;
+
+            int chunkIndex = GridArray.CellToIndex(chunkX, chunkY);
+
+            T[] array = m_Chunks.GetItem(chunkIndex);
             if(array == null)
             {
                 array = new T[chunkSize * chunkSize];
-                m_Chunks.SetItem(index, array);
+                m_Chunks.SetItem(chunkIndex, array);
             }
 
-            array[FastMath.Abs(((y % chunkSize) * chunkSize) + (x % chunkSize))] = item;
+            int localCellX = x - (chunkX * chunkSize);
+            int localCellY = y - (chunkY * chunkSize);
+
+            array[Utils.CoordToIndex(FastMath.Abs(localCellX), FastMath.Abs(localCellY), chunkSize)] = item;
         }
 
         public T GetItem(int x, int y)
         {
-            //T[] chunk = m_Chunks.GetItem((x / chunkSize) - (((x & int.MinValue) >> 31) & 1), (y / chunkSize) - (((y & int.MinValue) >> 31) & 1));
-            //int xChunk = (x / chunkSize) - (((x & int.MinValue) >> 31) & 1);
-            //int yChunk = (y / chunkSize) - (((y & int.MinValue) >> 31) & 1);
-            T[] chunk = GetChunk(x, y);
-            //Debug.Log("GETITEM: " + xChunk + ", " + yChunk);
-            //UnityEngine.Debug.Log(((x / chunkSize) - (((x & int.MinValue) >> 31) & 1)).ToString() + " | " + ((y / chunkSize) - (((y & int.MinValue) >> 31) & 1)).ToString());
-            //UnityEngine.Debug.Log("Index: " + (((y % chunkSize) * chunkSize) + (x % chunkSize)).ToString());
+            int negativityBoost = (((x & int.MinValue) >> 31) & 1);
+            int chunkX = ((x + negativityBoost) / chunkSize) - negativityBoost;
+            negativityBoost = (((y & int.MinValue) >> 31) & 1);
+            int chunkY = ((y + negativityBoost) / chunkSize) - negativityBoost;
+
+            int chunkIndex = GridArray.CellToIndex(chunkX, chunkY);
+
+            T[] chunk = m_Chunks.GetItem(chunkIndex);
+
             if(chunk != null)
-                return chunk[FastMath.Abs(((y % chunkSize) * chunkSize) + (x % chunkSize))];
+            {
+                int localCellX = x - (chunkX * chunkSize);
+                int localCellY = y - (chunkY * chunkSize);
+                return chunk[Utils.CoordToIndex(FastMath.Abs(localCellX), FastMath.Abs(localCellY), chunkSize)];
+            }
+
             return default;
         }
 
