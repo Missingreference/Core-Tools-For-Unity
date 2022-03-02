@@ -2,8 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-using Debug = UnityEngine.Debug;
-
 namespace Elanetic.Tools
 {
     public class ChunkedGridArray<T>
@@ -61,19 +59,21 @@ namespace Elanetic.Tools
             return default;
         }
 
+        /// <summary>
+        /// Get chunk by cell position.
+        /// </summary
         public T[] GetChunk(int x, int y)
         {
             int negativityBoost = (((x & int.MinValue) >> 31) & 1);
             x = ((x + negativityBoost) / chunkSize) - negativityBoost;
             negativityBoost = (((y & int.MinValue) >> 31) & 1);
             y = ((y + negativityBoost) / chunkSize) - negativityBoost;
-            if(x == 1 && y == -1)
-            {
-                Debug.Log("Getting chunk target");
-            }
             return m_Chunks.GetItem(x, y);
         }
 
+        /// <summary>
+        /// Get chunk from chunk index. Can return null.
+        /// </summary>
         public T[] GetChunk(int chunkIndex)
         {
             return m_Chunks.GetItem(chunkIndex);

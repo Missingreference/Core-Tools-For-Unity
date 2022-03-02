@@ -198,6 +198,7 @@ namespace Elanetic.Graphics
                 m_LastEncodeFrame = Time.renderedFrameCount;
             }
         }
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static private void InitSyncTexture()
         {

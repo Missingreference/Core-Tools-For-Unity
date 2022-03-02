@@ -3,8 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-using UnityEngine;
-
 namespace Elanetic.Tools
 {
     /// <summary>
@@ -254,14 +252,14 @@ namespace Elanetic.Tools
             return m_Array[index].item;
         }
 
-        public void PrintArray()
+        public string PrintArray()
         {
             string s = "Item Count: " + count.ToString() + "\n";
             for(int i = 0; i < count; i++)
             {
                 s += "[" + i.ToString() + "][" + m_Array[i].gridIndex.ToString() + " => " + m_Array[i].item.ToString() + "]\n";
             }
-            Debug.Log(s);
+            return s;
         }
 
         public struct PackedElement
