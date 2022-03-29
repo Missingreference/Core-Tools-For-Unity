@@ -189,7 +189,10 @@ namespace Elanetic.Tools
         /// </summary>
         public T GetItem(int gridIndex)
         {
-            return m_Array[GetItemIndex(gridIndex)].item;
+            int itemIndex = GetItemIndex(gridIndex);
+            if(itemIndex < 0)
+                return default;
+            return m_Array[itemIndex].item;
         }
 
 
