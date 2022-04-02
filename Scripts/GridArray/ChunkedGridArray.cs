@@ -10,6 +10,7 @@ namespace Elanetic.Tools
         /// Size of individual chunk.
         /// </summary>
         public int chunkSize { get; private set; }
+
         /// <summary>
         /// Size in chunks.
         /// </summary>
@@ -94,6 +95,9 @@ namespace Elanetic.Tools
             return m_Chunks.GetItem(chunkIndex);
         }
 
+        /// <summary>
+        /// Get index of chunk.
+        /// </summary>
         public int GetChunkIndex(int x, int y)
         {
             int negativityBoost = (((x & int.MinValue) >> 31) & 1);
@@ -103,9 +107,18 @@ namespace Elanetic.Tools
             return GridArray.CellToIndex(x,y);
         }
 
+        /// <summary>
+        /// Get cell index with chunk from global cell position.
+        /// </summary>
         public int GetCellIndexWithinChunk(int x, int y)
         {
-            return FastMath.Abs(((y % chunkSize) * chunkSize) + (x % chunkSize));
+            int negativityBoost = (((x & int.MinValue) >> 31) & 1);
+            int chunkX = ((x + negativityBoost) / chunkSize) - negativityBoost;
+            negativityBoost = (((y & int.MinValue) >> 31) & 1);
+            int chunkY = ((y + negativityBoost) / chunkSize) - negativityBoost;
+            int localCellX = x - (chunkX * chunkSize);
+            int localCellY = y - (chunkY * chunkSize);
+            return Utils.CoordToIndex(FastMath.Abs(localCellX), FastMath.Abs(localCellY), chunkSize);
         }
     }
 }
