@@ -54,7 +54,6 @@ namespace Elanetic.Tools
         /// It is faster than normal Min but will return incorrect data if the above rule is not followed.
         /// A good rule of thumb is if you think you are potentially using big numbers, use the regular FastMath.Min function.
         /// </summary>
-        /// Notes: Benchmarks have shown that MinFast is only slightly faster than Min.
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public int MinFast(int a, int b)
         {
@@ -96,7 +95,6 @@ namespace Elanetic.Tools
         /// It is faster than normal Min but will return incorrect data if the above rule is not followed.
         /// A good rule of thumb is if you think you are potentially using big numbers, use the regular FastMath.Max function.
         /// </summary>
-        /// Notes: Benchmarks have shown that MaxFast is only slightly faster than Max.
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public int MaxFast(int a, int b)
         {
@@ -117,7 +115,7 @@ namespace Elanetic.Tools
         }
 
         /// <summary>
-        /// Get the value clamped between a minimum and maximum value. If within the bounds it will return the inputted value.
+        /// Get the value clamped between a minimum and maximum value. If within the bounds it will return the inputted value. Has branching statements.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public int Clamp(int value, int min, int max)
@@ -129,9 +127,9 @@ namespace Elanetic.Tools
 
         /// <summary>
         /// Get the value clamped between a minimum and maximum value. If within the bounds it will return the inputted value.
-        /// Use this if you are sure that the result of A subtracted by B is within int.MinValue and int.MaxValue.
-        /// It is faster than normal Min but will return incorrect data if the above rule is not followed.
-        /// A good rule of thumb is if you think you are potentially using big numbers, use the regular FastMath.Max function.
+        /// Use this if you are sure that the result of Value subtracted by Min or Value subtracted by Max is within int.MinValue and int.MaxValue.
+        /// It is faster than normal Clamp but will return incorrect data if the above rule is not followed.
+        /// A good rule of thumb is if you think you are potentially using big numbers, use the regular FastMath.Clamp function.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public int ClampFast(int value, int min, int max)
