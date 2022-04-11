@@ -136,8 +136,8 @@ namespace Elanetic.Tools
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public int ClampFast(int value, int min, int max)
         {
-//#if SAFE_EXECUTION
-  /*          int dif;
+#if SAFE_EXECUTION
+            int dif;
             try
             {
                 dif = checked(value - min);
@@ -146,11 +146,11 @@ namespace Elanetic.Tools
             catch(OverflowException ex)
             {
                 throw new OverflowException("FastMath.FastClamp has been used incorrectly. Value - Min or Value - Max must not overflow past int.MinValue or int.MaxValue otherwise it will result in a bad return. Use FastMath.Clamp instead for cases like these.", ex);
-            }*/
-//#else
+            }
+#else
             int dif = value - min;
             dif = (value - (dif & (dif >> 63))) - max;
-//#endif
+#endif
             return max + (dif & (dif >> 63));
         }
     }
