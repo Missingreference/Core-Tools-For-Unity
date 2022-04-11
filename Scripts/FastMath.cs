@@ -115,5 +115,43 @@ namespace Elanetic.Tools
 #endif
             return a - (dif & (dif >> 63));
         }
+
+        /// <summary>
+        /// Get the value clamped between a minimum and maximum value. If within the bounds it will return the inputted value.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public int Clamp(int value, int min, int max)
+        {
+            if(value < min) return min;
+            else if(value > max) return max;
+            return value;
+        }
+
+        /// <summary>
+        /// Get the value clamped between a minimum and maximum value. If within the bounds it will return the inputted value.
+        /// Use this if you are sure that the result of A subtracted by B is within int.MinValue and int.MaxValue.
+        /// It is faster than normal Min but will return incorrect data if the above rule is not followed.
+        /// A good rule of thumb is if you think you are potentially using big numbers, use the regular FastMath.Max function.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public int ClampFast(int value, int min, int max)
+        {
+//#if SAFE_EXECUTION
+  /*          int dif;
+            try
+            {
+                dif = checked(value - min);
+                dif = checked((value - (dif & (dif >> 63))) - max);
+            }
+            catch(OverflowException ex)
+            {
+                throw new OverflowException("FastMath.FastClamp has been used incorrectly. Value - Min or Value - Max must not overflow past int.MinValue or int.MaxValue otherwise it will result in a bad return. Use FastMath.Clamp instead for cases like these.", ex);
+            }*/
+//#else
+            int dif = value - min;
+            dif = (value - (dif & (dif >> 63))) - max;
+//#endif
+            return max + (dif & (dif >> 63));
+        }
     }
 }
