@@ -113,7 +113,7 @@ namespace Elanetic.Tools
 #else
             int dif = a - b;
 #endif
-            return b - (dif & (dif >> 63));
+            return a - (dif & (dif >> 63));
         }
     }
 }
