@@ -151,5 +151,27 @@ namespace Elanetic.Tools
 #endif
             return max + (dif & (dif >> 63));
         }
+
+        /// <summary>
+        /// Get the logarithmic value at base 2. The result is of type integer so expect floor rounding and no infinities.
+        /// Source: https://stackoverflow.com/a/30643928
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public int Log2(int value)
+        {
+            int r = 0xFFFF - value >> 31 & 0x10;
+            value >>= r;
+            int shift = 0xFF - value >> 31 & 0x8;
+            value >>= shift;
+            r |= shift;
+            shift = 0xF - value >> 31 & 0x4;
+            value >>= shift;
+            r |= shift;
+            shift = 0x3 - value >> 31 & 0x2;
+            value >>= shift;
+            r |= shift;
+            r |= (value >> 1);
+            return r;
+        }
     }
 }
