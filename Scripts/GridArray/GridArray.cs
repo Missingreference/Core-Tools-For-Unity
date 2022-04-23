@@ -8,8 +8,9 @@ namespace Elanetic.Tools
 {
     /// <summary>
     /// This class creates an array to store values on a 2D grid. Lookups are faster than a Dictionary, especially in combination with ChunkedGridArray.
-    /// Downside is setting coordinates far from (0,0) allocates a lot of memory depending on the type.
+    /// Downside is setting coordinates far from (0,0) allocates a lot of memory depending on the type. Use ChunkedGridArray for better allocations management.
     /// It is recommended that if you plan to make your home coordinate far from origin that you add an offset to this as input to be as close as possible to origin to reduce allocations.
+    /// REVIEW: Does this class need to exist? Can we fully replace it with ChunkedGridArray since it is the definitive version of GridArray? ChunkedGridArray manages memory way better but doesn't have the performant reusability that GridArray.GetItem(index) has.
     /// </summary>
     static public class GridArray
     {
@@ -38,9 +39,18 @@ namespace Elanetic.Tools
             //Calculate tile index within region
             Vector2Int pos = new Vector2Int(FastMath.Abs(x) - regionX, FastMath.Abs(y) - regionY);
             int tileIndex = pos.y + pos.x - 1;
+            //This uses the Gauss Sum formula to count the number of indices in the following triangle pattern repeating representing 1 of 4 regions:
+            //[20]
+            //[14][19]
+            //[ 9][13][18]
+            //[ 5][ 8][12][17]
+            //[ 2][ 4][ 7][11][16]
+            //[ 0][ 1][ 3][ 6][10][15] ...
             tileIndex = ((tileIndex + 1) * (tileIndex + 2) / 2) + pos.y;
 
             //Get specific index within all regions
+            //Thus packing all regions into a single array ordered as so:
+            //[0][0][0][0][1][1][1][1][2][2][2][2][3][3][3][3][4][4][4][4]...
             tileIndex = (tileIndex * 4) + regionIndex;
 
             return tileIndex;
@@ -71,7 +81,7 @@ namespace Elanetic.Tools
         /// <summary>
         /// The width or height of the grid.
         /// </summary>
-        public int size { get; private set; }
+        public int size => m_Size;
 
         /// <summary>
         /// The size of the internal array.
@@ -80,7 +90,10 @@ namespace Elanetic.Tools
 
         public T[] m_Array;
 
-        private int m_DistanceResizeAmount;
+        private int m_Size;
+        private int m_SizeSquared;
+        private int m_DistanceResizeAmount = 16;
+        private int m_DataSize;
 
         /// <summary>
         /// Initialize the GridArray with the width or height of the grid.
@@ -90,17 +103,30 @@ namespace Elanetic.Tools
         /// <param name="distanceResizeAmount">How far on the grid you want to resize to. Every time we need to resize we will resize the specified amount in every direction.
         /// For example: If we need to resize the internal array with a 16 x 16 grid and we have a distanceResizeAmount of 16, the new grid size will be 32 x 32. Resize again and it will be 48 x 48. And so on.
         /// </param>
-        public GridArray(int initialSize=16, int distanceResizeAmount=16)
+        public GridArray(int initialSize=16)
         {
 #if SAFE_EXECUTION
             if(initialSize < 0)
                 throw new ArgumentOutOfRangeException(nameof(initialSize), "Initial size must be a positive number.");
-            if(distanceResizeAmount <= 0)
-                throw new ArgumentOutOfRangeException(nameof(distanceResizeAmount), "Distance resize amount must be more than zero");
 #endif
-            m_Array = new T[initialSize * initialSize];
-            size = initialSize;
-            m_DistanceResizeAmount = distanceResizeAmount;
+            m_Size = initialSize;
+            m_SizeSquared = m_Size * m_Size;
+            m_Array = new T[m_SizeSquared];
+            if(typeof(T).IsValueType)
+            {
+                m_DataSize = Marshal.SizeOf(typeof(T));
+            }
+            else if(IntPtr.Size == 8) //64 bit system
+            {
+                m_DataSize = 8;
+            }
+            else //32 bit system
+            {
+                m_DataSize = 4;
+            }
+
+            //Scale distance resize from 16 to 1 between 1KB and 1MB
+            m_DistanceResizeAmount = 17 - FastMath.Clamp((m_SizeSquared * m_DataSize) / 1024, 1, 16);
         }
 
         /// <summary>
@@ -122,27 +148,21 @@ namespace Elanetic.Tools
         {
             if(index >= m_Array.Length)
             {
-                //No point allocating space if were only setting it to null
-                if(ReferenceEquals(item, null)) return;
+                //No point allocating space if were only setting it to null/default value
+                if(EqualityComparer<T>.Default.Equals(item, default))
+                        return;
 
-                while(index >= (size * size))
-                    size += m_DistanceResizeAmount;
+                while(index >= m_SizeSquared)
+                {
+                    m_Size += m_DistanceResizeAmount;
+                    m_SizeSquared = m_Size * m_Size;
+                }
 
 #if SAFE_EXECUTION
-                long memorySizeInBytes;
-                long longSize = (long)size;
-                if(typeof(T).IsValueType)
-                {
-                    memorySizeInBytes = ((long)Marshal.SizeOf(typeof(T))) * longSize * longSize;
-                }
-                else if(IntPtr.Size == 8) //64 bit system
-                {
-                    memorySizeInBytes = 8L * longSize * longSize;
-                }
-                else //32 bit system
-                {
-                    memorySizeInBytes = 4L * longSize * longSize;
-                }
+                long memorySizeInBytes = (long)m_DataSize;
+                long longSizeSquared = (long)m_SizeSquared;
+
+                memorySizeInBytes *= longSizeSquared * longSizeSquared;
 
                 if(memorySizeInBytes / 1024L / 1024L / 1024L > 1L)
                 {
@@ -153,9 +173,11 @@ namespace Elanetic.Tools
 
 #endif
                 //Resize array
-                T[] newArray = new T[size * size];
+                T[] newArray = new T[m_SizeSquared];
                 Array.Copy(m_Array, 0, newArray, 0, m_Array.Length);
                 m_Array = newArray;
+
+                m_DistanceResizeAmount = 17 - FastMath.Clamp((m_SizeSquared * m_DataSize) / 1024, 1, 16);
             }
 #if SAFE_EXECUTION
             else if(index < 0)
