@@ -99,9 +99,7 @@ namespace Elanetic.Tools
         /// Initialize the GridArray with the width or height of the grid.
         /// Remember: the internal array size will be initialSize * initialSize so an initialSize of 16 will be 256 allocated cells.
         /// </summary>
-        /// <param name="initialSize">The width or height of the initial grid.</param>
-        /// <param name="distanceResizeAmount">How far on the grid you want to resize to. Every time we need to resize we will resize the specified amount in every direction.
-        /// For example: If we need to resize the internal array with a 16 x 16 grid and we have a distanceResizeAmount of 16, the new grid size will be 32 x 32. Resize again and it will be 48 x 48. And so on.
+        /// <param name="initialSize">The width or height of the initial grid.</param>\
         /// </param>
         public GridArray(int initialSize=16)
         {
