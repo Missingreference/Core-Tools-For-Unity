@@ -190,7 +190,7 @@ namespace Elanetic.Tools
             if(chunkActualIndex < 0) //Chunk does not exist so no value exists
                 return default;
 
-            return m_ChunkActuals[chunkActualIndex][((posX % m_ChunkSize) * m_ChunkSize) + (posY % m_ChunkSize)];
+            return m_ChunkActuals[chunkActualIndex][((posY % m_ChunkSize) * m_ChunkSize) + (posX % m_ChunkSize)];
         }
 
         /*
