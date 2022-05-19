@@ -173,5 +173,23 @@ namespace Elanetic.Tools
             r |= (value >> 1);
             return r;
         }
+        
+        /// <summary>
+        /// Get the signed modulos.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public int Mod(int dividend, int divisor)
+        {
+            return ((dividend % divisor) + divisor) % divisor;
+        }
+
+        /// <summary>
+        /// Get the signed modulos.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public float Mod(float dividend, float divisor)
+        {
+            return ((dividend % divisor) + divisor) % divisor;
+        }
     }
 }
