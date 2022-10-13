@@ -276,7 +276,7 @@ namespace Elanetic.Tools.Unity
 
         public Texture2DPaster(Texture2D baseTexture)
         {
-#if SAFE_EXECUTION
+#if DEBUG
             if(baseTexture == null)
                 throw new ArgumentNullException("Inputted base texture is null.");
             if(baseTexture.format != TextureFormat.RGBA32)
@@ -289,7 +289,7 @@ namespace Elanetic.Tools.Unity
         //Size of blank(alpha) texture
         public Texture2DPaster(Vector2Int textureSize)
         {
-#if SAFE_EXECUTION
+#if DEBUG
             if(textureSize.x <= 0 || textureSize.y <= 0)
                 throw new ArgumentException("Inputted texture size must have a width and height of more than zero.");
 #endif
@@ -329,7 +329,7 @@ namespace Elanetic.Tools.Unity
 
             BoundsInt2D rect = new BoundsInt2D(position.x, position.y, size.x, size.y);
 
-#if SAFE_EXECUTION
+#if DEBUG
             if(!rect.Overlaps(m_BaseRect))
                 throw new ArgumentException("Inputted texture position does not overlap with the base texture.");
 #endif
@@ -372,7 +372,7 @@ namespace Elanetic.Tools.Unity
         {
             Profiler.BeginSample("AddTexture");
             Profiler.BeginSample("Setup");
-#if SAFE_EXECUTION
+#if DEBUG
             if(texture == null)
                 throw new ArgumentNullException("Inputted texture is null.");
             if(texture.format != TextureFormat.RGBA32)
@@ -421,7 +421,7 @@ namespace Elanetic.Tools.Unity
                 rect = new BoundsInt2D(texturePosition.x, texturePosition.y, texture.height, texture.width);
             }
 
-#if SAFE_EXECUTION
+#if DEBUG
             if(!rect.Overlaps(m_BaseRect))
                 throw new ArgumentException("Inputted texture position does not overlap with the base texture.");
 #endif
@@ -530,7 +530,7 @@ namespace Elanetic.Tools.Unity
 
         public void ForceComplete()
         {
-#if SAFE_EXECUTION
+#if DEBUG
             if(m_JobCount == 0)
                 throw new InvalidOperationException("Tried to force Texture2D Paster but there is no pasting textures. Make sure to add textures using AddTexture() and then ForceComplete.");
 #endif

@@ -15,7 +15,7 @@ namespace Elanetic.Tools.Serialization
 
         public BitReader(Stream stream)
         {
-#if SAFE_EXECUTION
+#if DEBUG
             if (stream == null) 
                 throw new ArgumentNullException(nameof(stream), "Inputted stream is null.");
 #endif
@@ -146,8 +146,8 @@ namespace Elanetic.Tools.Serialization
         /// <returns>The length of the array received from the stream.</returns>
         public long ReadByteArray(byte[] byteArray)
         {
-#if SAFE_EXECUTION
-            if (byteArray == null) 
+#if DEBUG
+            if(byteArray == null) 
                 throw new ArgumentNullException(nameof(byteArray), "Inputted byte array is null.");
 #endif
 

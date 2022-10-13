@@ -27,7 +27,7 @@ namespace Elanetic.Tools
 
         public ChunkedGridArray(int chunkSize = 16, int initialSize = 8)
         {
-#if SAFE_EXECUTION
+#if DEBUG
             if(chunkSize <= 0)
             {
                 //Also if your setting your chunk size to a really low number, your missing out on the optimizations of this class. Too large and your allocating too much and leaving more potentially unused memory.
@@ -73,7 +73,7 @@ namespace Elanetic.Tools
             int chunkPosY = posY / chunkSize;
 
             int size = chunkPosX + chunkPosY + 1;
-#if SAFE_EXECUTION
+#if DEBUG
             //In the event of an overflow, the inputted position has reached too far. For example in testing trying to set 375000,375000 to a value triggers this overflow however where 370000,370000 does not.
             //In addition as you approach these coordinates you are allocating more than a gigabyte of memory in integers alone anyways.
             int targetRegionIndex = checked(((size - 1) * size / 2) + chunkPosY);

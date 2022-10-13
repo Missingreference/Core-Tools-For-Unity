@@ -48,7 +48,7 @@ namespace Elanetic.Tools.Unity
 
         public TextureAtlas(Vector2Int textureSize, Vector2Int initialTextureCount, TextureFormat textureFormat=TextureFormat.RGBA32)
         {
-#if SAFE_EXECUTION
+#if DEBUG
             if(textureSize.x <= 0 || textureSize.y <= 0)
                 throw new ArgumentException("Inputted texture size must be a positive number.");
             if(textureSize.x >= SystemInfo.maxTextureSize / 2 && textureSize.y >= SystemInfo.maxTextureSize / 2)
@@ -89,7 +89,7 @@ namespace Elanetic.Tools.Unity
 
         public int AddTexture(Texture2D texture)
         {
-#if SAFE_EXECUTION
+#if DEBUG
             if(texture == null)
                 throw new ArgumentNullException("Inputted texture cannot be null.");
             if(texture.width != textureSize.x || texture.height != textureSize.y)
@@ -112,7 +112,7 @@ namespace Elanetic.Tools.Unity
 
         public void ReplaceTexture(int atlasIndex, Texture2D texture)
         {
-#if SAFE_EXECUTION
+#if DEBUG
             if(atlasIndex >= textureCount)
                 throw new ArgumentException("Specified atlas index '" + atlasIndex + "' has not been set as a texture. Use AddTexture instead.");
             if(texture == null)
@@ -126,7 +126,7 @@ namespace Elanetic.Tools.Unity
 
         public Sprite CreateSprite(int atlasIndex, Vector2 pivot, float pixelsPerUnit)
         {
-#if SAFE_EXECUTION
+#if DEBUG
             if(atlasIndex < 0 || atlasIndex >= textureCount)
                 throw new ArgumentOutOfRangeException(nameof(atlasIndex), "Inputted atlas index is out of range.");
 #endif
@@ -157,7 +157,7 @@ namespace Elanetic.Tools.Unity
                 newTextureSize = newMaxTextureCount * textureSize;
             }
 
-#if SAFE_EXECUTION
+#if DEBUG
             if(m_MaxTextureCount == newMaxTextureCount)
                 throw new InvalidOperationException("Cannot resize atlas to a larger size. Reached system max texture size.");
 #endif

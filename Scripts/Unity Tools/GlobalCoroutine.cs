@@ -25,7 +25,7 @@ namespace Elanetic.Tools.Unity
 
         static public void Stop(Coroutine coroutine)
         {
-#if SAFE_EXECUTION
+#if DEBUG
             if(coroutine == null)
                 throw new ArgumentNullException(nameof(coroutine), "Inputted coroutine cannot be null.");
 #endif

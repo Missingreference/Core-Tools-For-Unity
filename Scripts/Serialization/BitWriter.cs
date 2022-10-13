@@ -18,7 +18,7 @@ namespace Elanetic.Tools.Serialization
         /// <param name="stream">The stream to write to.</param>
         public BitWriter(Stream stream)
         {
-#if SAFE_EXECUTION
+#if DEBUG
             if(stream == null)
                 throw new ArgumentNullException(nameof(stream), "Inputted stream is null.");
 #endif

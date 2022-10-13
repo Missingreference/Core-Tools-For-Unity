@@ -28,11 +28,11 @@ namespace Elanetic.Tools.Unity
             spriteAnimator = GetComponent<SpriteAnimator>();
         }
 
-        #region Public Functions
+#region Public Functions
 
         public void AddAnimation(SpriteAnimation animation)
         {
-#if SAFE_EXECUTION
+#if DEBUG
             if(string.IsNullOrEmpty(animation.animationName))
                 throw new ArgumentException("Cannot add animation. The name of the Sprite Animation cannot be null or empty.", nameof(animation));
 
@@ -173,7 +173,7 @@ namespace Elanetic.Tools.Unity
 
         public void Play(SpriteAnimation animation)
         {
-#if SAFE_EXECUTION
+#if DEBUG
             VerifyAnimation(animation);
 #endif
 
@@ -182,7 +182,7 @@ namespace Elanetic.Tools.Unity
 
         public void Play(SpriteAnimation animation, bool loop)
         {
-#if SAFE_EXECUTION
+#if DEBUG
             VerifyAnimation(animation);
 #endif
 
@@ -191,7 +191,7 @@ namespace Elanetic.Tools.Unity
 
         public void Play(SpriteAnimation animation, float playbackSpeed)
         {
-#if SAFE_EXECUTION
+#if DEBUG
             VerifyAnimation(animation);
 #endif
 
@@ -200,7 +200,7 @@ namespace Elanetic.Tools.Unity
 
         public void Play(SpriteAnimation animation, int startFrame)
         {
-#if SAFE_EXECUTION
+#if DEBUG
             VerifyAnimation(animation);
 #endif
 
@@ -209,7 +209,7 @@ namespace Elanetic.Tools.Unity
 
         public void Play(SpriteAnimation animation, bool loop, float playbackSpeed)
         {
-#if SAFE_EXECUTION
+#if DEBUG
             VerifyAnimation(animation);
 #endif
 
@@ -219,7 +219,7 @@ namespace Elanetic.Tools.Unity
         public void Play(SpriteAnimation animation, bool loop, int startFrame)
         {
 
-#if SAFE_EXECUTION
+#if DEBUG
             VerifyAnimation(animation);
 #endif
 
@@ -228,7 +228,7 @@ namespace Elanetic.Tools.Unity
 
         public void Play(SpriteAnimation animation, float playbackSpeed, int startFrame)
         {
-#if SAFE_EXECUTION
+#if DEBUG
             VerifyAnimation(animation);
 #endif
 
@@ -237,7 +237,7 @@ namespace Elanetic.Tools.Unity
 
         public void Play(SpriteAnimation animation, bool loop, float playbackSpeed, int startFrame)
         {
-#if SAFE_EXECUTION
+#if DEBUG
             VerifyAnimation(animation);
 #endif
 
@@ -264,7 +264,7 @@ namespace Elanetic.Tools.Unity
             spriteAnimator.Play();
         }
 
-        #endregion
+#endregion
     }
 }
 #endif

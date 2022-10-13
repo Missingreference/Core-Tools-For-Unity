@@ -14,8 +14,8 @@ namespace Elanetic.Tools
         /// </summary>
 		static public int Get(params float[] weights)
 		{
-#if SAFE_EXECUTION
-			if(weights.Length == 0)
+#if DEBUG
+            if(weights.Length == 0)
 			{
 				throw new ArgumentException("Must have more than 0 parameters inputted.", nameof(weights));
 			}

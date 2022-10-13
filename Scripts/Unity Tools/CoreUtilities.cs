@@ -242,7 +242,7 @@ namespace Elanetic.Tools.Unity
             for(int i = 0; i < sprites.Length; i++)
             {
                 Sprite sprite = sprites[i];
-#if SAFE_EXECUTION
+#if DEBUG
                 if(sprite.texture != sourceTexture) 
                     throw new InvalidOperationException("Each inputted sprite must have the same source texture.");
                 if(sprite == null) 

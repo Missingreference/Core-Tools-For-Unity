@@ -26,8 +26,8 @@ namespace Elanetic.Tools.Unity
         //Assumes that the inputted sprites are the frames
         public SpriteAnimation(string animationName, Sprite[] sprites, float animationSpeed, bool loop)
         {
-#if SAFE_EXECUTION
-            if (string.IsNullOrWhiteSpace(animationName)) 
+#if DEBUG
+            if(string.IsNullOrWhiteSpace(animationName)) 
                 throw new ArgumentException("Argument 'animationName' cannot be null or whitespace.");
             if (sprites == null || sprites.Length == 0) 
                 throw new ArgumentException("Argument 'sprites' cannot be null or an empty array.");
@@ -50,7 +50,7 @@ namespace Elanetic.Tools.Unity
 
         public SpriteAnimation(string animationName, Sprite[] sprites, float animationSpeed, bool loop, params int[] animationFrames)
         {
-#if SAFE_EXECUTION
+#if DEBUG
             if(string.IsNullOrWhiteSpace(animationName)) 
                 throw new ArgumentException("Argument 'animationName' cannot be null or whitespace.");
             if (sprites == null || sprites.Length == 0) 
@@ -89,8 +89,8 @@ namespace Elanetic.Tools.Unity
         /// <returns></returns>
         public Sprite GetFrame(int frameIndex)
         {
-#if SAFE_EXECUTION
-            if (frameIndex < 0 || frameIndex > frames.Length - 1) 
+#if DEBUG
+            if(frameIndex < 0 || frameIndex > frames.Length - 1) 
                 throw new IndexOutOfRangeException("Argument 'frameIndex' must be more than or equal to zero and a valid index within the size of the sprites array.");
 #endif
             return sprites[frames[frameIndex]];

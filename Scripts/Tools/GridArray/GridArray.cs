@@ -103,7 +103,7 @@ namespace Elanetic.Tools
         /// </param>
         public GridArray(int initialSize=16)
         {
-#if SAFE_EXECUTION
+#if DEBUG
             if(initialSize < 0)
                 throw new ArgumentOutOfRangeException(nameof(initialSize), "Initial size must be a positive number.");
 #endif
@@ -163,7 +163,7 @@ namespace Elanetic.Tools
 
                 m_DistanceResizeAmount = 17 - FastMath.Clamp((m_SizeSquared * m_DataSize) / 1024, 1, 16);
             }
-#if SAFE_EXECUTION
+#if DEBUG
             else if(index < 0)
                 throw new IndexOutOfRangeException("Received a negative index: " + index.ToString() + ". Either GridArray.CellToIndex returned an index that overflows past Int.MaxValue or bad input.");
 #endif
@@ -179,7 +179,7 @@ namespace Elanetic.Tools
             int index = GridArray.CellToIndex(x, y);
             if(index >= m_Array.Length)
                 return default;
-#if SAFE_EXECUTION
+#if DEBUG
             else if(index < 0)
                 throw new IndexOutOfRangeException("Received a negative index from GridArray.CellToIndex meaning that the index overflows past Int.MaxValue. Cell Coordinate: " + x.ToString() + ", " + y.ToString());
 #endif

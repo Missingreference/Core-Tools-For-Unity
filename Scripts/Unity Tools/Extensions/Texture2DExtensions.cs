@@ -26,7 +26,7 @@ namespace Elanetic.Tools.Unity
 
         static public void SetPixels32(this Texture2D targetTexture, int x, int y, int blockWidth, int blockHeight, Color32 color, int miplevel)
         {
-#if SAFE_EXECUTION
+#if DEBUG
             if(blockWidth * blockHeight <= 0)
                 throw new ArgumentException("Inputted block size must be more than zero.");
             if(x < 0 || y < 0 || x >= targetTexture.width || y >= targetTexture.height)

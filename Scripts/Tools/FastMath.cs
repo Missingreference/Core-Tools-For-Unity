@@ -9,7 +9,7 @@ namespace Elanetic.Tools
 {
     /// <summary>
     /// The purpose of this math library is to use variations of math functions to prioritize performance above everything else with minimal branching as possible.
-    /// This may come at a cost of a range of valid input which will be specified by function summaries and have SAFE_EXECUTION preprocessor to be a safety check for valid input.
+    /// This may come at a cost of a range of valid input which will be specified by function summaries and have DEBUG preprocessor to be a safety check for valid input.
     /// </summary>
     static public class FastMath
     {
@@ -22,7 +22,7 @@ namespace Elanetic.Tools
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public int Abs(int value)
         {
-#if SAFE_EXECUTION
+#if DEBUG
             if(value == int.MinValue)
                 throw new OverflowException("The minimum integer -2147483648 is not capable of beings positive due to the maximum integer being 2147483647. A byproduct of two's complement.");
 #endif
@@ -57,7 +57,7 @@ namespace Elanetic.Tools
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public int MinFast(int a, int b)
         {
-#if SAFE_EXECUTION
+#if DEBUG
             int dif;
             try
             {
@@ -98,7 +98,7 @@ namespace Elanetic.Tools
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public int MaxFast(int a, int b)
         {
-#if SAFE_EXECUTION
+#if DEBUG
             int dif;
             try
             {
@@ -134,7 +134,7 @@ namespace Elanetic.Tools
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public int ClampFast(int value, int min, int max)
         {
-#if SAFE_EXECUTION
+#if DEBUG
             int dif;
             try
             {

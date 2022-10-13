@@ -29,7 +29,7 @@ namespace Elanetic.Tools.Unity
 
         public DeltaTimer(float time, Action<float> listener)
         {
-#if SAFE_EXECUTION
+#if DEBUG
             if(time <= 0.0f)
                 throw new ArgumentException(nameof(time), "Inputted time must be more than zero.");
             if(listener == null)
