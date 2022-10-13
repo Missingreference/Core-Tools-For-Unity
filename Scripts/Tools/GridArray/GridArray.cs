@@ -155,21 +155,7 @@ namespace Elanetic.Tools
                     m_Size += m_DistanceResizeAmount;
                     m_SizeSquared = m_Size * m_Size;
                 }
-
-#if SAFE_EXECUTION
-                long memorySizeInBytes = (long)m_DataSize;
-                long longSizeSquared = (long)m_SizeSquared;
-
-                memorySizeInBytes *= longSizeSquared * longSizeSquared;
-
-                if(memorySizeInBytes / 1024L / 1024L / 1024L > 1L)
-                {
-#if UNITY_EDITOR || UNITY_STANDALONE
-                    UnityEngine.Debug.LogWarning("Allocating more than 1 GB of memory for a resize (" + (memorySizeInBytes / 1024L / 1024L / 1024L).ToString() + " GB).");
-#endif
-                }
-
-#endif
+                
                 //Resize array
                 T[] newArray = new T[m_SizeSquared];
                 Array.Copy(m_Array, 0, newArray, 0, m_Array.Length);
