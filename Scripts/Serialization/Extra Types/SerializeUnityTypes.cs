@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Elanetic.Tools.Serialization
+namespace Elanetic.Tools.Serialization.Unity
 {
     public static class SerializeUnityTypes
     {

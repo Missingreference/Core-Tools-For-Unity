@@ -1,0 +1,35 @@
+{
+    "name": "Elanetic.Tools.Unity",
+    "rootNamespace": "",
+    "references": [
+        "Unity.Mathematics",
+        "Unity.Collections",
+        "Unity.Burst",
+        "Elanetic.Graphics"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.modules.tilemap",
+            "expression": "",
+            "define": "UNITY_TILEMAP"
+        },
+        {
+            "name": "com.unity.collections",
+            "expression": "",
+            "define": "UNITY_COLLECTIONS"
+        },
+        {
+            "name": "com.elanetic.directgraphics",
+            "expression": "",
+            "define": "ENABLE_DIRECT_GRAPHICS"
+        }
+    ],
+    "noEngineReferences": false
+}

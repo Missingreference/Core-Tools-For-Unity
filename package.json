@@ -1,0 +1,12 @@
+{
+  "name": "com.elanetic.coretools",
+  "version": "0.1.0",
+  "displayName": "Core Tools",
+  "description": "All purpose tools that consist of various Unity scripts for handling tasks, complex structures or simple code to maximize performance of mathematic operations.",
+  "author": {
+    "name": "Elanetic",
+    "email": "Isaac@elanetic.net",
+    "url": "https://www.elanetic.net"
+  },
+  "type": "tool"
+}
