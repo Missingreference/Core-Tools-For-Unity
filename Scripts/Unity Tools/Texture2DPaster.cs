@@ -1,4 +1,5 @@
 #if UNITY_COLLECTIONS //Defined in Elanetic.Tools assembly definition file
+/*
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -543,4 +544,5 @@ namespace Elanetic.Tools.Unity
         }
     }
 }
+*/
 #endif
