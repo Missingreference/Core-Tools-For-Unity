@@ -19,6 +19,7 @@ namespace Elanetic.Tools.Serialization
                     throw new IndexOutOfRangeException("Position of Unsafe Writer must be between 0 and less than the length.");
 #endif
                 m_Position = value;
+                m_CurrentTarget = m_StartTarget + m_Position;
             }
         }
         public int length => m_Length;
