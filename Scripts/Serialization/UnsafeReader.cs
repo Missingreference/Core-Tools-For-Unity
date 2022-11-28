@@ -14,10 +14,9 @@ namespace Elanetic.Tools.Serialization
             get => m_Position;
             set
             {
-#if DEBUG
-                if(value < 0 || value >= length)
+                if(value < 0 || value > length)
                     throw new IndexOutOfRangeException("Position of Unsafe Reader must be between 0 and less than the length.");
-#endif
+
                 m_Position = value;
                 m_CurrentTarget = m_StartTarget + m_Position;
             }

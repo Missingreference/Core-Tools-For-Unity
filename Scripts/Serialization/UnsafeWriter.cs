@@ -14,10 +14,9 @@ namespace Elanetic.Tools.Serialization
             get => m_Position;
             set
             {
-#if DEBUG
-                if(value < 0 || value >= length)
-                    throw new IndexOutOfRangeException("Position of Unsafe Writer must be between 0 and less than the length.");
-#endif
+                if(value < 0 || value > length)
+                    throw new IndexOutOfRangeException("Position of Unsafe Writer must be between 0 and less than or equal the length. Inputted: " + value.ToString());
+
                 m_Position = value;
                 m_CurrentTarget = m_StartTarget + m_Position;
             }
