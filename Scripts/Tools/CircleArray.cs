@@ -121,6 +121,42 @@ namespace Elanetic.Tools
         }
         
         /// <summary>
+        /// Move the start index to another index of the items
+        /// </summary>
+        public void Shift(int count)
+        {
+            if(m_Count < m_Array.Length)
+            {
+                int fixedAmountToMove = ((count % m_Count) + m_Count) % m_Count;
+                if(fixedAmountToMove < m_Count / 2)
+                {
+                    //Shift first half
+                    for(int i = 0; i < fixedAmountToMove; i++)
+                    {
+                        m_Array[IndexToAdjustedIndex(m_Count + i)] = m_Array[IndexToAdjustedIndex(i)];
+                    }
+                    m_StartIndex = IndexToAdjustedIndex(fixedAmountToMove);
+                }
+                else
+                {
+                    //Shift second half
+                    int countToMove = m_Count - fixedAmountToMove;
+                    int destinationIndex = m_Array.Length - countToMove;
+                    for(int i = countToMove - 1; i >= 0; i--)
+                    {
+                        m_Array[IndexToAdjustedIndex(destinationIndex + i)] = m_Array[IndexToAdjustedIndex(fixedAmountToMove + i)];
+                    }
+                    m_StartIndex = IndexToAdjustedIndex(destinationIndex);
+                }
+            }
+            else
+            {
+                //No shifting needed, just a start index move using math
+                m_StartIndex = (((m_StartIndex+count) % m_Array.Length) + m_Array.Length) % m_Array.Length;
+            }
+        }
+        
+        /// <summary>
         /// Replace internal array with a new sized array and copies the tracked contents to the new array.
         /// </summary>]
         /* TODO
