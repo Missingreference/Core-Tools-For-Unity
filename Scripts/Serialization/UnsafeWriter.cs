@@ -235,6 +235,16 @@ namespace Elanetic.Tools.Serialization
             m_CurrentTarget = m_StartTarget + m_Position;
         }
 
+        public void WriteMemory(void* data, int length)
+        {
+            int newPosition = CheckSafeWrite(length);
+
+            Buffer.MemoryCopy(data, m_CurrentTarget, length, length);
+
+            m_Position = newPosition;
+            m_CurrentTarget = m_StartTarget + m_Position;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private int CheckSafeWrite(int size)
         {
