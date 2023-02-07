@@ -26,18 +26,6 @@ namespace Elanetic.Tools
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T GetItem(int index)
-        {
-#if DEBUG
-            if(m_Count == 0)
-                throw new IndexOutOfRangeException("Cannot retrieve item. Circle array has not items.");
-            if(index < 0 || index >= m_Count)
-                throw new IndexOutOfRangeException("Inputted index must be from 0 to less than the count of the circle array.");
-#endif
-            return m_Array[IndexToAdjustedIndex(index)];
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddItem(T value)
         {
 #if DEBUG
@@ -155,7 +143,7 @@ namespace Elanetic.Tools
                 m_StartIndex = (((m_StartIndex+count) % m_Array.Length) + m_Array.Length) % m_Array.Length;
             }
         }
-        
+
         /// <summary>
         /// Replace internal array with a new sized array and copies the tracked contents to the new array.
         /// </summary>]
@@ -183,6 +171,32 @@ namespace Elanetic.Tools
         }
         */
 
+        public T this[int index]
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+#if DEBUG
+                if(m_Count == 0)
+                    throw new IndexOutOfRangeException("Cannot retrieve item. Circle array has not items.");
+                if(index < 0 || index >= m_Count)
+                    throw new IndexOutOfRangeException("Inputted index must be from 0 to less than the count of the circle array.");
+#endif
+                return m_Array[IndexToAdjustedIndex(index)];
+            }
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            set
+            {
+#if DEBUG
+                if(m_Count == 0)
+                    throw new IndexOutOfRangeException("Cannot set item. Circle array has not items.");
+                if(index < 0 || index >= m_Count)
+                    throw new IndexOutOfRangeException("Inputted index must be from 0 to less than the count of the circle array.");
+#endif
+                m_Array[IndexToAdjustedIndex(index)] = value;
+            }
+        }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private int IndexToAdjustedIndex(int index)
         {
