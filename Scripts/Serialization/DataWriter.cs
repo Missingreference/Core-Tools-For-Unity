@@ -109,6 +109,7 @@ namespace Elanetic.Tools.Serialization
             }
             
             OnResize(size);
+            m_Capacity = size;
         }
 
         public abstract void Dispose();
